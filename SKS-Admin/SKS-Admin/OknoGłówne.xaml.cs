@@ -27,6 +27,7 @@ namespace SKS_Admin
         private TcpClient client;
         private List<string> black_list;
         private string[] black_list_table;
+        private string[] users_table;
 
         public OknoGłówne(TcpClient client)
         {
@@ -40,12 +41,12 @@ namespace SKS_Admin
         {
             Users user_login = new Users(3, "VERIFYLIST;", client);
             string Recive_message = user_login.ReceiveMessage();
-            //black_list_table = Regex.Split(Recive_message, ";");
-            /*listBox.Items.Add("PC1");
-            listBox.Items.Add("PC2");
-            listBox.Items.Add("PC3");
-            listBox.Items.Add("PC4");
-            listBox.Items.Add("PC5");*/
+            black_list_table = Regex.Split(Recive_message, ";");
+            for (int i = 2; i < black_list_table.Length; i++)
+            {
+                list_czarna.Items.Add(black_list_table[i]);
+                black_list.Add(black_list_table[i]);
+            }
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -61,12 +62,34 @@ namespace SKS_Admin
         private void button1_Click(object sender, RoutedEventArgs e)
         {
             string temp = textBox.Text;
-            black_list.Add(temp);
             if (!list_czarna.Items.Contains(temp))
             {
                 list_czarna.Items.Add(temp);
             }
-            //list_czarna.Items.Add(temp);
+            if (black_list.Exists(x => x == temp))
+            {
+                return;
+            }
+            black_list.Add(temp);
+
+            string tab = "";
+            int i = 1;
+            foreach (string black in black_list)
+            {
+                if (i == black_list.Count)
+                {
+                    tab += black;
+                }
+                else
+                {
+                    tab += black + ";";
+                }
+                i++;
+            }
+            MessageBox.Show(tab);
+            Users user_login = new Users(4, client, "LIST", tab);
+            //string Recive_message = user_login.ReceiveMessage();
+
         }
 
         private void button2_Click(object sender, RoutedEventArgs e)
@@ -74,7 +97,12 @@ namespace SKS_Admin
             Users user_login = new Users(2, client);
             string Recive_message = user_login.ReceiveMessage();
             listBox.Items.Clear();
+            users_table = Regex.Split(Recive_message, ";");
 
+            for (int i = 0; i < users_table.Length; i++)
+            {
+                listBox.Items.Add(users_table[i]);
+            }
         }
     }
 }
