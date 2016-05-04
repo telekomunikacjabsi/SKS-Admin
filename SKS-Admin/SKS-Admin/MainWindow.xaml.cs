@@ -76,6 +76,7 @@ namespace SKS_Admin
                 else
                 {
                     MessageBox.Show("Error . . .");
+                    this.Close();
                     return;
                 }    
         }

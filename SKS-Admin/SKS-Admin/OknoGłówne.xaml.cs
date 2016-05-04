@@ -26,6 +26,7 @@ namespace SKS_Admin
     {
         private TcpClient client;
         private List<string> black_list;
+        private string[] black_list_table2;
         private string[] black_list_table;
         private string[] users_table;
 
@@ -41,8 +42,10 @@ namespace SKS_Admin
         {
             Users user_login = new Users(3, "VERIFYLIST;", client);
             string Recive_message = user_login.ReceiveMessage();
-            black_list_table = Regex.Split(Recive_message, ";");
-            for (int i = 2; i < black_list_table.Length; i++)
+            black_list_table2 = Regex.Split(Recive_message, ";");
+            MessageBox.Show(black_list_table2[2]);
+            black_list_table = Regex.Split(black_list_table2[2], ":");
+            for (int i = 0; i < black_list_table.Length; i++)
             {
                 list_czarna.Items.Add(black_list_table[i]);
                 black_list.Add(black_list_table[i]);
@@ -82,7 +85,7 @@ namespace SKS_Admin
                 }
                 else
                 {
-                    tab += black + ";";
+                    tab += black + ":";
                 }
                 i++;
             }
