@@ -18,6 +18,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Security.Cryptography;
 
 namespace SKS_Admin
 {
@@ -28,14 +29,14 @@ namespace SKS_Admin
     {
         public MainWindow()
         {
-            InitializeComponent();
-            
+            InitializeComponent();          
         }
 
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
         }
+
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
@@ -44,90 +45,44 @@ namespace SKS_Admin
                 MessageBox.Show("Wproadź nazwę grupy!");
                 return;
             }
-            if (passwordBox.ToString() == null)
+            string temp = passwordBox.Password;
+            if (temp == "")
             {
                 MessageBox.Show("Wproadź hasło!");
                 return;
             }
-            IPEndPoint ip = new IPEndPoint(IPAddress.Any, 5000);
-            TcpListener listener = new TcpListener(ip);
-            TcpClient client = new TcpClient();
-            //IPEndPoint point = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000);
 
-           try
-            {
-                client.Connect("127.0.0.1", 5000);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Problem z połączeniem z serwerem . . .");
-                return;
-            }
-            NetworkStream stream = client.GetStream();
-            WriteMessage(stream, "CONNECT;ADMIN;aka");
-            while (true)
-            {
-                string[] message = ReceiveMessage(stream);
-                if (message[1] == "SUCCESS")
+                TcpClient client = new TcpClient();
+                IPEndPoint IP_End = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000);
+                client.Connect(IP_End);
+
+
+            string password = passwordBox.Password;
+            /*var data = Encoding.UTF8.GetBytes(password);
+            var md5 = new MD5CryptoServiceProvider();
+            var md5data = md5.ComputeHash(data);*/
+
+
+            Users user_login = new Users(1, textBox.Text, password, client);
+            string Recive_message = user_login.ReceiveMessage();
+
+            if (Recive_message == "AUTH;SUCCESS")
                 {
-                    OknoGłówne ok = new OknoGłówne();
+                    OknoGłówne ok = new OknoGłówne(client);
                     ok.Show();                   
                     this.Close();
-                    return;
                     //stream.Close();
                 }
-                if (message[1] == "FAIL")
+                else
                 {
                     MessageBox.Show("Error . . .");
                     return;
-                }
-                
-                //textBox.AppendText(x[0]);
-            }
-            //client.Close();
-
-            /*BinaryWriter writer = new BinaryWriter(client.GetStream());
-            writer.Write("CONNECT;ADMIN;ala");*/
-            /* try
-             {
-                 client.Connect(point);
-                 if (client.Connected)
-                 {
-                     textBox1.AppendText("Udało sie");
-                 }
-             }
-             catch (Exception)
-             {
-
-                 throw;
-             }
-             /*
-             OknoGłówne ok = new OknoGłówne();
-             ok.Show();
-             this.Close();*/
+                }    
         }
 
-        private string[] ReceiveMessage(NetworkStream stream)
+        private void textBox1_TextChanged(object sender, TextChangedEventArgs e)
         {
-            int i;
-            byte[] bytes = new byte[256];
-            while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-            {
-                string msg = Encoding.ASCII.GetString(bytes, 0, i);
-                return Regex.Split(msg, ";"); // automatyczny podział komunikatu na argumenty
-            }
-            return new string[] { String.Empty };
-        }
 
-        private void WriteMessage(NetworkStream stream, params string[] message)
-        {
-            WriteMessage(stream, String.Join(";", message));
-        }
-
-        private void WriteMessage(NetworkStream stream, string message)
-        {
-            byte[] bytes = Encoding.ASCII.GetBytes(message);
-            stream.Write(bytes, 0, bytes.Length);
         }
     }
 }
