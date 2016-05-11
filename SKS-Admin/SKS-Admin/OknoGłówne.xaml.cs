@@ -36,20 +36,40 @@ namespace SKS_Admin
             this.client = client;
             black_list = new List<string>();
             ADD_LIST();
+            GET_USERS();
         }
 
         private void ADD_LIST()
         {
             Users user_login = new Users(3, "VERIFYLIST;", client);
             string Recive_message = user_login.ReceiveMessage();
-            black_list_table2 = Regex.Split(Recive_message, ";");
-            MessageBox.Show(black_list_table2[2]);
-            black_list_table = Regex.Split(black_list_table2[2], ":");
-            for (int i = 0; i < black_list_table.Length; i++)
+            if (Recive_message=="OK;!$")
             {
-                list_czarna.Items.Add(black_list_table[i]);
-                black_list.Add(black_list_table[i]);
+                return;
             }
+            else
+            {
+                black_list_table2 = Regex.Split(Recive_message, ";");
+                MessageBox.Show(black_list_table2[2]);
+                black_list_table = Regex.Split(black_list_table2[2], ":");
+                for (int i = 0; i < black_list_table.Length; i++)
+                {
+                    list_czarna.Items.Add(black_list_table[i]);
+                    black_list.Add(black_list_table[i]);
+                }
+            }
+        }
+
+        private void GET_USERS()
+        {
+            Users user = new Users(2, client);
+            string Recive_message_user = user.ReceiveMessage();
+            users_table = Regex.Split(Recive_message_user, ";");
+            
+             for (int i = 1; i < users_table.Length; i++)
+             {
+                 listBox.Items.Add(users_table[i]);
+             }
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -100,12 +120,23 @@ namespace SKS_Admin
             Users user_login = new Users(2, client);
             string Recive_message = user_login.ReceiveMessage();
             listBox.Items.Clear();
+            //usunięcie poprzednich danych po odświeżeniu
             users_table = Regex.Split(Recive_message, ";");
 
-            for (int i = 0; i < users_table.Length; i++)
+            for (int i = 1; i < users_table.Length; i++)
             {
                 listBox.Items.Add(users_table[i]);
             }
+        }
+
+        private void button3_Click(object sender, RoutedEventArgs e)
+        {
+            string[] temp_table = Regex.Split(users_table[1], ":");
+            TcpClient pc_client = new TcpClient();
+            IPEndPoint IP_End = new IPEndPoint(IPAddress.Parse(temp_table[0]), Int32.Parse(temp_table[1]));
+            pc_client.Connect(IP_End);
+            
+            Client pc = new Client(pc_client);
         }
     }
 }

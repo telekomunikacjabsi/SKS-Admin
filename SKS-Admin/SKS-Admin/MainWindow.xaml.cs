@@ -36,8 +36,7 @@ namespace SKS_Admin
         {
 
         }
-
-
+ 
         private void button_Click(object sender, RoutedEventArgs e)
         {
             if (textBox.Text.ToString() == "")
@@ -52,21 +51,19 @@ namespace SKS_Admin
                 return;
             }
 
-                TcpClient client = new TcpClient();
-                IPEndPoint IP_End = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000);
-                client.Connect(IP_End);
-
+            TcpClient client = new TcpClient();
+            IPEndPoint IP_End = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000);
+            client.Connect(IP_End);
 
             string password = passwordBox.Password;
             /*var data = Encoding.UTF8.GetBytes(password);
             var md5 = new MD5CryptoServiceProvider();
             var md5data = md5.ComputeHash(data);*/
 
-
             Users user_login = new Users(1, textBox.Text, password, client);
             string Recive_message = user_login.ReceiveMessage();
 
-            if (Recive_message == "AUTH;SUCCESS")
+            if (Recive_message == "AUTH;SUCCESS!$")
                 {
                     OknoGłówne ok = new OknoGłówne(client);
                     ok.Show();                   

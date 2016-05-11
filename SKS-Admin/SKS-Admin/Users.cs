@@ -56,24 +56,24 @@ namespace SKS_Admin
             {
                 if (kom_inf == 1)
                 {
-                    String temp = "CONNECT;ADMIN;" + login + ";" + password;
+                    String temp = "CONNECT;ADMIN;" + login + ";" + password+"!$";
                     SendMessage(temp);
                 }
                 else if(kom_inf == 2)
                 {
-                    String temp = "USERS";
+                    String temp = "USERS!$";
                     SendMessage(temp);
                 }
                 else if (kom_inf == 3)
                 {
                     String temp = communicat;
-                    SendMessage("VERIFYLIST;" + 0 + ";" +0);
+                    SendMessage("VERIFYLIST;" + 0 + ";" + 0+ "!$");
                 }
                 else if (kom_inf == 4)
                 {
                     String temp = communicat;
                     MessageBox.Show(new_item);
-                    SendMessage("LIST;" + 0 + ";" + new_item);
+                    SendMessage("LIST;" + 0 + ";" + new_item+"!$");
                 }
             }
             catch (Exception x)
