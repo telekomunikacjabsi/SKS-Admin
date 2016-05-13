@@ -56,7 +56,8 @@ namespace SKS_Admin
             {
                 if (kom_inf == 1)
                 {
-                    String temp = "CONNECT;ADMIN;" + login + ";" + password+"!$";
+                    string help = CalculateSHA256(Encoding.UTF8.GetBytes(password), Encoding.UTF8.GetBytes(login));
+                    String temp = "CONNECT;ADMIN;" + login + ";" + help+"!$";
                     SendMessage(temp);
                 }
                 else if(kom_inf == 2)
@@ -67,7 +68,7 @@ namespace SKS_Admin
                 else if (kom_inf == 3)
                 {
                     String temp = communicat;
-                    SendMessage("VERIFYLIST;" + 0 + ";" + 0+ "!$");
+                    SendMessage("VERIFYLIST;" + -1 + ";" + -1+ "!$");
                 }
                 else if (kom_inf == 4)
                 {
@@ -107,6 +108,18 @@ namespace SKS_Admin
             var checkSum = MD5.Create();
             byte[] bytes = Encoding.Default.GetBytes(sum.ToString());
             return checkSum.ComputeHash(bytes);
+        }
+
+        private string CalculateSHA256(byte[] text, byte[] salt)
+        {
+            SHA256Managed crypt = new SHA256Managed();
+            StringBuilder hash = new StringBuilder();
+            byte[] crypto = crypt.ComputeHash(text.Concat(salt).ToArray(), 0, text.Length + salt.Length);
+            foreach (byte theByte in crypto)
+            {
+                hash.Append(theByte.ToString("x2"));
+            }
+            return hash.ToString();
         }
     }
 }

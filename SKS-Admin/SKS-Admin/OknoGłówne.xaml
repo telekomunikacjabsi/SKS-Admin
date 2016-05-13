@@ -14,7 +14,7 @@
             <Button x:Name="button2" Content="Odśwież listę" Width="100" Margin="20,6,0,0" Height="25" VerticalAlignment="Top" FontSize="14" Click="button2_Click"/>
             <Button x:Name="button3" Content="Button" Height="38" VerticalAlignment="Top" Width="75" Margin="-100,339,0,0" Click="button3_Click"/>
         </DockPanel>
-        <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="284" Margin="10,100,10,0" VerticalAlignment="Top" Width="124" FontSize="16" FontWeight="Bold" FontStyle="Italic"/>
+        <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="284" Margin="10,100,10,0" VerticalAlignment="Top" Width="125" FontSize="15" FontWeight="Bold" FontStyle="Italic"/>
         <Label x:Name="L" Content="Klienci" HorizontalAlignment="Left" Margin="30,10,0,0" VerticalAlignment="Top" Width="89" Height="42" Background="#00000000" Foreground="White" FontSize="26.667" RenderTransformOrigin="0.5,0.5">
             <Label.RenderTransform>
                 <TransformGroup>

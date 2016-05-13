@@ -16,6 +16,7 @@ using System.Net.Sockets;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
+using System.Threading;
 
 namespace SKS_Admin
 {
@@ -35,12 +36,13 @@ namespace SKS_Admin
             InitializeComponent();
             this.client = client;
             black_list = new List<string>();
-            ADD_LIST();
+            GET_LIST();
             GET_USERS();
         }
 
-        private void ADD_LIST()
+        private void GET_LIST()
         {
+            //list_czarna.Items.Clear();
             Users user_login = new Users(3, "VERIFYLIST;", client);
             string Recive_message = user_login.ReceiveMessage();
             if (Recive_message=="OK;!$")
@@ -64,9 +66,11 @@ namespace SKS_Admin
         {
             Users user = new Users(2, client);
             string Recive_message_user = user.ReceiveMessage();
-            users_table = Regex.Split(Recive_message_user, ";");
-            
-             for (int i = 1; i < users_table.Length; i++)
+            string temp = Recive_message_user.Remove(Recive_message_user.Length-2);
+            string [] users_table_temp = Regex.Split(temp, ";");
+            users_table = Regex.Split(users_table_temp[1], "%1");
+                        
+             for (int i = 0; i < users_table.Length; i++)
              {
                  listBox.Items.Add(users_table[i]);
              }
@@ -112,18 +116,18 @@ namespace SKS_Admin
             MessageBox.Show(tab);
             Users user_login = new Users(4, client, "LIST", tab);
             //string Recive_message = user_login.ReceiveMessage();
-
         }
 
         private void button2_Click(object sender, RoutedEventArgs e)
         {
-            Users user_login = new Users(2, client);
-            string Recive_message = user_login.ReceiveMessage();
             listBox.Items.Clear();
-            //usunięcie poprzednich danych po odświeżeniu
-            users_table = Regex.Split(Recive_message, ";");
+            Users user = new Users(2, client);
+            string Recive_message_user = user.ReceiveMessage();
+            string temp = Recive_message_user.Remove(Recive_message_user.Length - 2);
+            string[] users_table_temp = Regex.Split(temp, ";");
+            users_table = Regex.Split(users_table_temp[1], "%1");
 
-            for (int i = 1; i < users_table.Length; i++)
+            for (int i = 0; i < users_table.Length; i++)
             {
                 listBox.Items.Add(users_table[i]);
             }
@@ -131,12 +135,7 @@ namespace SKS_Admin
 
         private void button3_Click(object sender, RoutedEventArgs e)
         {
-            string[] temp_table = Regex.Split(users_table[1], ":");
-            TcpClient pc_client = new TcpClient();
-            IPEndPoint IP_End = new IPEndPoint(IPAddress.Parse(temp_table[0]), Int32.Parse(temp_table[1]));
-            pc_client.Connect(IP_End);
-            
-            Client pc = new Client(pc_client);
+
         }
     }
 }
