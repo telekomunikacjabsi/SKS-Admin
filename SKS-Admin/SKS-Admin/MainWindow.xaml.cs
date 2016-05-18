@@ -71,7 +71,7 @@ namespace SKS_Admin
 
             if (Recive_message == "AUTH;SUCCESS!$")
                 {
-                    OknoGłówne ok = new OknoGłówne(client);
+                    OknoGłówne ok = new OknoGłówne(client, textBox.Text, password);
                     ok.Show();                   
                     this.Close();
                     //stream.Close();

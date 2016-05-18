@@ -19,7 +19,6 @@ namespace SKS_Admin
         private string password;
         private string communicat;
         private string new_item;
-        private byte[] ListChecksum;
 
         public Users(int kom_inf, string login, string password, TcpClient client)
         {
@@ -41,7 +40,7 @@ namespace SKS_Admin
             this.communicat = communicat;
             connect(kom_inf);
         }
-        
+
         public Users(int kom_inf, TcpClient client, string communicat, string item)
         {
             this.client = client;
@@ -49,7 +48,7 @@ namespace SKS_Admin
             this.communicat = communicat;
             connect(kom_inf);
         }
-
+        
         public void connect(int kom_inf)
         {
             try
@@ -68,7 +67,7 @@ namespace SKS_Admin
                 else if (kom_inf == 3)
                 {
                     String temp = communicat;
-                    SendMessage("VERIFYLIST;" + -1 + ";" + -1+ "!$");
+                    SendMessage("VERIFYLIST;" + 0 + ";" + -1+ "!$");
                 }
                 else if (kom_inf == 4)
                 {
@@ -100,14 +99,6 @@ namespace SKS_Admin
             string returndata = Encoding.UTF8.GetString(inStream);
             MessageBox.Show(returndata);
             return returndata.Substring(0, returndata.IndexOf('\0'));
-        }
-
-        public byte[] CalculateMD5(string[] lines)
-        {
-            string sum = String.Join(String.Empty, lines);
-            var checkSum = MD5.Create();
-            byte[] bytes = Encoding.Default.GetBytes(sum.ToString());
-            return checkSum.ComputeHash(bytes);
         }
 
         private string CalculateSHA256(byte[] text, byte[] salt)

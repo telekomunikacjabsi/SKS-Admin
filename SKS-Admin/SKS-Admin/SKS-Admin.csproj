@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Bitmap.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="ListManager.cs" />
     <Compile Include="Users.cs" />

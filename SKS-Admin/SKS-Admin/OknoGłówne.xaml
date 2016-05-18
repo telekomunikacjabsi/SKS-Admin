@@ -7,14 +7,14 @@
         mc:Ignorable="d"
         Title="Panel sterowania laboratorium" Height="500" Width="1000" MinHeight="500" MaxHeight="500" MinWidth="1000" MaxWidth="1000">
     <Grid>
-        <DockPanel HorizontalAlignment="Left" Height="60" LastChildFill="False" VerticalAlignment="Top" Width="992" Background="#FF3A0587">
+        <DockPanel HorizontalAlignment="Left" Height="60" LastChildFill="False" VerticalAlignment="Top" Width="992" Background="Black">
             <Label x:Name="label" Content="Podgląd centralny" Height="60" VerticalAlignment="Top" FontSize="30" Foreground="White" Margin="350,1,0,0"/>
         </DockPanel>
-        <DockPanel HorizontalAlignment="Left" Height="409" LastChildFill="False" Margin="0,60,0,0" VerticalAlignment="Top" Width="150" Background="#FF2C3633">
-            <Button x:Name="button2" Content="Odśwież listę" Width="100" Margin="20,6,0,0" Height="25" VerticalAlignment="Top" FontSize="14" Click="button2_Click"/>
-            <Button x:Name="button3" Content="Button" Height="38" VerticalAlignment="Top" Width="75" Margin="-100,339,0,0" Click="button3_Click"/>
+        <DockPanel HorizontalAlignment="Left" Height="409" LastChildFill="False" Margin="0,60,0,0" VerticalAlignment="Top" Width="150" Background="#FF212121">
+            <Button x:Name="button2" Content="Odśwież listę" Width="100" Margin="20,0,0,378" Height="25" VerticalAlignment="Bottom" FontSize="14" Click="button2_Click"/>
+            <Button x:Name="button3" Content="Połącz" Height="38" VerticalAlignment="Top" Width="75" Margin="-100,339,0,0" Click="button3_Click" FontSize="16"/>
         </DockPanel>
-        <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="284" Margin="10,100,10,0" VerticalAlignment="Top" Width="125" FontSize="15" FontWeight="Bold" FontStyle="Italic"/>
+        <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="284" Margin="10,100,10,0" VerticalAlignment="Top" Width="125" FontSize="14" FontWeight="Bold" FontStyle="Italic"/>
         <Label x:Name="L" Content="Klienci" HorizontalAlignment="Left" Margin="30,10,0,0" VerticalAlignment="Top" Width="89" Height="42" Background="#00000000" Foreground="White" FontSize="26.667" RenderTransformOrigin="0.5,0.5">
             <Label.RenderTransform>
                 <TransformGroup>
@@ -25,11 +25,12 @@
                 </TransformGroup>
             </Label.RenderTransform>
         </Label>
-        <DockPanel HorizontalAlignment="Left" Height="409" LastChildFill="False" Margin="756,60,0,0" VerticalAlignment="Top" Width="240" Background="#FF2C3633">
-            <RichTextBox x:Name="richTextBox" Height="160" VerticalAlignment="Top" Width="204" Margin="15,15,15,0">
+        <DockPanel HorizontalAlignment="Left" Height="409" LastChildFill="False" Margin="756,60,0,0" VerticalAlignment="Top" Width="240" Background="#FF212121">
+            <RichTextBox x:Name="richTextBox" Height="253" VerticalAlignment="Top" Width="204" Margin="15,15,15,0">
                 <FlowDocument/>
             </RichTextBox>
-            <Button x:Name="button" Content="Czarna lista" Height="40" VerticalAlignment="Top" Width="104" Margin="-225,200,0,0" Click="button_Click" FontSize="16"/>
+            <Button x:Name="button" Content="Czarna lista" Height="40" VerticalAlignment="Top" Width="105" Margin="-125,350,0,0" Click="button_Click" FontSize="16"/>
+            <Button x:Name="button4" Content="Podgląd" Height="40" VerticalAlignment="Top" Width="105" Margin="-345,350,0,0" Click="button4_Click" FontSize="16"/>
         </DockPanel>
         <Label x:Name="L_Copy" Content="Komunikaty" HorizontalAlignment="Left" Margin="802,7,0,0" VerticalAlignment="Top" Width="155" Height="48" Background="#00000000" Foreground="White" FontSize="26.667" RenderTransformOrigin="0.5,0.5">
             <Label.RenderTransform>
@@ -41,13 +42,20 @@
                 </TransformGroup>
             </Label.RenderTransform>
         </Label>
-        <Grid HorizontalAlignment="Left" Height="409" Margin="150,60,0,0" VerticalAlignment="Top" Width="606" Background="#FFA8A8A8">
+        <Grid x:Name="czarna_grid" HorizontalAlignment="Left" Height="409" Margin="150,60,0,0" VerticalAlignment="Top" Width="606" Background="#FF303030">
             <ListBox x:Name="list_czarna" HorizontalAlignment="Left" Height="244" Margin="30,47,0,0" VerticalAlignment="Top" Width="530"/>
             <Label x:Name="label1" Content="Czarna lista" HorizontalAlignment="Left" Margin="30,10,0,0" VerticalAlignment="Top" FontSize="22" Width="148"/>
             <Button x:Name="button1" Content="Dodaj" HorizontalAlignment="Left" Margin="400,325,0,0" VerticalAlignment="Top" Width="74" Height="21" Click="button1_Click"/>
             <Label x:Name="label2" Content="Dodaj link do czarnej listy" HorizontalAlignment="Left" Margin="30,295,0,0" VerticalAlignment="Top" FontSize="16"/>
+            <Grid x:Name="Statystyki_grid" HorizontalAlignment="Left" Height="410" VerticalAlignment="Top" Width="606" Background="#FF303030" Margin="0,2,0,-3">
+                <Label x:Name="label3" Content="Screen " HorizontalAlignment="Left" Margin="53,10,0,0" VerticalAlignment="Top" Width="153" FontSize="20"/>
+                <Image x:Name="image1"  HorizontalAlignment="Left" Height="266" Margin="53,47,0,0" VerticalAlignment="Top" Width="474"/>
+                <TextBox x:Name="textBox1" HorizontalAlignment="Left" Height="24" Margin="53,362,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="310" FontSize="14"/>
+                <Button x:Name="button5" Content="Wyślij" HorizontalAlignment="Left" Margin="397,362,0,0" VerticalAlignment="Top" Width="90" Height="24" FontSize="14" Click="button5_Click"/>
+                <Label x:Name="label3_Copy" Content="Screen " HorizontalAlignment="Left" Margin="53,318,0,0" VerticalAlignment="Top" Width="153" FontSize="20"/>
+            </Grid>
         </Grid>
-        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="180,385,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="322" TextChanged="textBox_TextChanged" FontSize="13"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="180,385,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="322" TextChanged="textBox_TextChanged" FontSize="13" Visibility="Hidden"/>
 
     </Grid>
 </Window>
