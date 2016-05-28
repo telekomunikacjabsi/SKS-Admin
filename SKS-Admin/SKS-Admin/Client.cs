@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 
 namespace SKS_Admin
 {
-    class Client
+    public class Client
     {
         private TcpClient client;
         private string login;
@@ -132,8 +132,6 @@ namespace SKS_Admin
                     }
                 }
                 //message_que.CopyTo(bytes, 0);
-                message_que.IndexOf(znak[0]);
-
                 if (EndPart == false) // jeśli odczytana wiadomość nie zawiera znacznika końca wiadomości
                     ReceiveMessageIMG(true);
                 if (recurrentCall)
@@ -143,7 +141,6 @@ namespace SKS_Admin
             //string[] users_table_temp = Regex.Split(message, ";");
             //toBytes = Encoding.UTF8.GetBytes(bytes);
             File.WriteAllBytes("admin.txt", toBytes);
-            MessageBox.Show(" ");
         }
 
         private string CalculateSHA256(byte[] text, byte[] salt)

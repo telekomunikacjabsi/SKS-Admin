@@ -74,6 +74,18 @@ namespace SKS_Admin
              {
                  listBox.Items.Add(users_table[i]);
              }
+            próba();
+        }
+
+        public void próba()
+        {
+            string[] tab = Regex.Split(users_table[0], ":");
+            TcpClient client2 = new TcpClient();
+            IPEndPoint IP_End = new IPEndPoint(IPAddress.Parse(tab[0]), int.Parse(tab[1]));
+            client2.Connect(IP_End);
+            Client us = new Client(client2, "CONNECT", login, password);
+            us.ReceiveMessage();
+            new Thread(() => elo(us)).Start();
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -142,7 +154,16 @@ namespace SKS_Admin
 
         private void button3_Click(object sender, RoutedEventArgs e)
         {
-            string curItem = listBox.SelectedItem.ToString();
+            OpenFileDialog op = new OpenFileDialog();
+            op.Title = "Select a picture";
+            op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" +
+              "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
+              "Portable Network Graphic (*.png)|*.png";
+            if (op.ShowDialog() == true)
+            {
+                image.Source = new BitmapImage(new Uri(op.FileName));
+            }
+            /*string curItem = listBox.SelectedItem.ToString();
             if (curItem != null)
             {
                 string[] tab = Regex.Split(curItem, ":");
@@ -151,13 +172,22 @@ namespace SKS_Admin
                 client2.Connect(IP_End);
                 Client us = new Client(client2, "CONNECT", login, password);
                 us.ReceiveMessage();
+                new Thread(() => elo(us)).Start();
+            }*/
+        }
 
+        public void elo(Client us)
+        {
+            while (true)
+            {
+                Thread.Sleep(10000);
                 us.SendMessage("SCREENSHOT!$");
                 us.ReceiveMessageIMG();
+                Dispatcher.Invoke(() => { image.Source = byteArrayToImage(us.get_byte()); });
+                us.toBytes = null;
+                us.message_que.Clear();
 
-                // byte[] buffer = File.ReadAllBytes(@"x.jpg");
-               // image.ClearValue();
-                image.Source = byteArrayToImage(us.get_byte());
+                //us.message_que = null;
             }
         }
 
@@ -239,7 +269,7 @@ namespace SKS_Admin
 
         private void SaveUsingEncoder(FrameworkElement visual, string fileName, BitmapEncoder encoder)
         {
-            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)visual.ActualWidth, (int)visual.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)visual.ActualWidth, (int)visual.ActualHeight, 180, 180, PixelFormats.Pbgra32);
             bitmap.Render(visual);
             BitmapFrame frame = BitmapFrame.Create(bitmap);
             encoder.Frames.Add(frame);
@@ -252,6 +282,7 @@ namespace SKS_Admin
 
         private void button6_Click(object sender, RoutedEventArgs e)
         {
+
             {
                 Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog();
                 dialog.Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp|Png Image|*.png";
