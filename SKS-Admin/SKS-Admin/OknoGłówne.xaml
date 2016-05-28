@@ -48,11 +48,12 @@
             <Button x:Name="button1" Content="Dodaj" HorizontalAlignment="Left" Margin="400,325,0,0" VerticalAlignment="Top" Width="74" Height="21" Click="button1_Click"/>
             <Label x:Name="label2" Content="Dodaj link do czarnej listy" HorizontalAlignment="Left" Margin="30,295,0,0" VerticalAlignment="Top" FontSize="16"/>
             <Grid x:Name="Statystyki_grid" HorizontalAlignment="Left" Height="410" VerticalAlignment="Top" Width="606" Background="#FF303030" Margin="0,2,0,-3">
-                <Label x:Name="label3" Content="Screen " HorizontalAlignment="Left" Margin="53,10,0,0" VerticalAlignment="Top" Width="153" FontSize="20"/>
-                <Image x:Name="image1"  HorizontalAlignment="Left" Height="266" Margin="53,47,0,0" VerticalAlignment="Top" Width="474"/>
-                <TextBox x:Name="textBox1" HorizontalAlignment="Left" Height="24" Margin="53,362,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="310" FontSize="14"/>
-                <Button x:Name="button5" Content="Wyślij" HorizontalAlignment="Left" Margin="397,362,0,0" VerticalAlignment="Top" Width="90" Height="24" FontSize="14" Click="button5_Click"/>
-                <Label x:Name="label3_Copy" Content="Screen " HorizontalAlignment="Left" Margin="53,318,0,0" VerticalAlignment="Top" Width="153" FontSize="20"/>
+                <Label x:Name="label3" Content="Podgląd stanowiska studenta" HorizontalAlignment="Left" Margin="53,10,0,0" VerticalAlignment="Top" Width="283" FontSize="20" Foreground="White"/>
+                <TextBox x:Name="textBox1" HorizontalAlignment="Left" Height="24" Margin="53,362,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="340" FontSize="14"/>
+                <Button x:Name="button5" Content="Wyślij" HorizontalAlignment="Left" Margin="419,362,0,0" VerticalAlignment="Top" Width="90" Height="24" FontSize="14" Click="button5_Click"/>
+                <Label x:Name="label3_Copy" Content="Wyślij ostrzeżenie:" HorizontalAlignment="Left" Margin="53,318,0,0" VerticalAlignment="Top" Width="185" FontSize="20" Foreground="White"/>
+                <Image x:Name="image" HorizontalAlignment="Left" Height="241" Margin="35,52,0,0" VerticalAlignment="Top" Width="456"/>
+                <Button x:Name="button6" Content="Button" HorizontalAlignment="Left" Margin="508,89,0,0" VerticalAlignment="Top" Width="80" Click="button6_Click"/>
             </Grid>
         </Grid>
         <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="180,385,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="322" TextChanged="textBox_TextChanged" FontSize="13" Visibility="Hidden"/>

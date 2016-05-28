@@ -1,22 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Security.Cryptography;
 using System.Threading;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
+using Microsoft.Win32;
 
 namespace SKS_Admin
 {
@@ -32,6 +25,7 @@ namespace SKS_Admin
         private string[] users_table;
         private string login;
         private string password;
+        private byte[] x = null;
         private Thread th;
 
         public OknoGłówne(TcpClient client, string login, string password)
@@ -58,7 +52,7 @@ namespace SKS_Admin
             else
             {
                 black_list_table2 = Regex.Split(temp, ";");
-                MessageBox.Show(black_list_table2[2]);
+                //MessageBox.Show(black_list_table2[2]);
                 black_list_table = Regex.Split(black_list_table2[2], ":");
                 for (int i = 0; i < black_list_table.Length; i++)
                 {
@@ -159,24 +153,47 @@ namespace SKS_Admin
                 us.ReceiveMessage();
 
                 us.SendMessage("SCREENSHOT!$");
-                MessageBox.Show(""+us.ReceiveIMAGE());
+                us.ReceiveMessageIMG();
 
-
-
+                // byte[] buffer = File.ReadAllBytes(@"x.jpg");
+               // image.ClearValue();
+                image.Source = byteArrayToImage(us.get_byte());
             }
         }
 
-        public static ImageSource ByteToImage(byte[] imageData)
+        public ImageSource byteArrayToImage(byte[] byteArrayIn)
         {
-            BitmapImage biImg = new BitmapImage();
-            MemoryStream ms = new MemoryStream(imageData);
-            biImg.BeginInit();
-            biImg.StreamSource = ms;
-            biImg.EndInit();
+            BitmapImage image = null;
+            if (byteArrayIn != null)
+            {
+                MemoryStream stream = new MemoryStream(byteArrayIn);
+                image = new BitmapImage();
+                image.BeginInit();
+                image.StreamSource = stream;
+                image.EndInit();
+            }
+            return image;
+        }
 
-            ImageSource imgSrc = biImg as ImageSource;
+        /*void picturebox1_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+        {
+            System.Drawing.Bitmap bmp;
+            using (MemoryStream ms = new MemoryStream(x))
+            {
+               bmp = new System.Drawing.Bitmap(ms);
+            }
+            System.Drawing.Point ulPoint = new System.Drawing.Point(0, 0);
+            e.Graphics.DrawImage(bmp, ulPoint);
+        }*/
 
-            return imgSrc;
+        public BitmapImage ImageFromBuffer(Byte[] bytes)
+        {
+            MemoryStream stream = new MemoryStream(bytes);
+            BitmapImage image = new BitmapImage();
+            image.BeginInit();
+            image.StreamSource = stream;
+            image.EndInit();
+            return image;
         }
 
         static int FreeTcpPort()
@@ -213,10 +230,57 @@ namespace SKS_Admin
                     
                 //}
                 //Client us2 = new Client(client2);
-                us.SendMessage("MESSAGE;"+ textBox1.Text + "!$");
-                //us.SendMessage("DISCONNECT!$");
+               us.SendMessage("MESSAGE;"+ textBox1.Text + "!$");
+              // us.SendMessage("DISCONNECT!$");
                 
-                client2.Close();
+                //client2.Close();
+            }
+        }
+
+        private void SaveUsingEncoder(FrameworkElement visual, string fileName, BitmapEncoder encoder)
+        {
+            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)visual.ActualWidth, (int)visual.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            bitmap.Render(visual);
+            BitmapFrame frame = BitmapFrame.Create(bitmap);
+            encoder.Frames.Add(frame);
+
+            using (var stream = System.IO.File.Create(fileName))  //error
+            {
+                encoder.Save(stream);
+            }
+        }
+
+        private void button6_Click(object sender, RoutedEventArgs e)
+        {
+            {
+                Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog();
+                dialog.Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp|Png Image|*.png";
+                dialog.ShowDialog();
+                if (dialog.FileName != "")
+                {
+                    //System.IO.FileStream fs = (System.IO.FileStream)dialog.OpenFile();
+                    String nameOfFile = dialog.FileName;
+                    switch (dialog.FilterIndex)
+                    {
+                        case 1:
+                            JpegBitmapEncoder enJpeg = new JpegBitmapEncoder();
+                            SaveUsingEncoder(image, nameOfFile, enJpeg);
+                            MessageBox.Show("Picture Saved Successfully.");
+                            break;
+
+                        case 2:
+                            BmpBitmapEncoder enBmp = new BmpBitmapEncoder();
+                            SaveUsingEncoder(image, nameOfFile, enBmp);
+                            MessageBox.Show("Picture Saved Successfully.");
+                            break;
+
+                        case 3:
+                            PngBitmapEncoder enPng = new PngBitmapEncoder();
+                            SaveUsingEncoder(image, nameOfFile, enPng);
+                            MessageBox.Show("Picture Saved Successfully.");
+                            break;
+                    }
+                }
             }
         }
     }

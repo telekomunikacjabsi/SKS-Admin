@@ -97,7 +97,7 @@ namespace SKS_Admin
             byte[] inStream = new byte[255];
             str.Read(inStream, 0, 255);
             string returndata = Encoding.UTF8.GetString(inStream);
-            MessageBox.Show(returndata);
+            //MessageBox.Show(returndata);
             return returndata.Substring(0, returndata.IndexOf('\0'));
         }
 
