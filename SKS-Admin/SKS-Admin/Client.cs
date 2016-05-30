@@ -102,7 +102,36 @@ namespace SKS_Admin
             return returndata.Substring(0, returndata.IndexOf('\0'));
         }
 
-        public void ReceiveMessageIMG(bool recurrentCall = false)
+
+        public void ReceiveMessageIMG()
+        {
+            NetworkStream stream = client.GetStream();
+            byte[] bytes = new byte[256];
+            byte[] znak = Encoding.UTF8.GetBytes(";");
+            int i;
+            if ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
+            {
+                int tmp = Array.IndexOf(bytes, znak[0]);
+                message = Encoding.UTF8.GetString(bytes, 0, tmp);
+                int stream_width = Int32.Parse(message);
+                ReceiveMessageIMG2(stream_width, stream);
+            }
+        }
+
+        public void ReceiveMessageIMG2(int stream_width, NetworkStream stream)
+        {
+            byte[] bytes = new byte[stream_width];
+            stream.Read(bytes, 0, bytes.Length);
+            for (int j = 0; j < bytes.Length; j++)
+            {
+                message_que.Add(bytes[j]);
+            }
+            toBytes = message_que.Concat(bytes).ToArray<byte>();
+            File.WriteAllBytes("admin.txt", toBytes);
+            MessageBox.Show("");
+        }
+
+        /*public void ReceiveMessageIMG(bool recurrentCall = false)
         {
             NetworkStream stream = client.GetStream();
             int i;
@@ -132,7 +161,7 @@ namespace SKS_Admin
             //string[] users_table_temp = Regex.Split(message, ";");
             //toBytes = Encoding.UTF8.GetBytes(bytes);
             File.WriteAllBytes("admin.txt", toBytes);
-        }
+        }*/
 
         private string CalculateSHA256(byte[] text, byte[] salt)
         {
