@@ -45,7 +45,7 @@ namespace SKS_Admin
             Users user_login = new Users(3, "VERIFYLIST;", client);
             string Recive_message = user_login.ReceiveMessage();
             string temp = Recive_message.Remove(Recive_message.Length - 2);
-            if (Recive_message=="OK;!$")
+            if (Recive_message == "OK;!$")
             {
                 return;
             }
@@ -66,15 +66,15 @@ namespace SKS_Admin
         {
             Users user = new Users(2, client);
             string Recive_message_user = user.ReceiveMessage();
-            string temp = Recive_message_user.Remove(Recive_message_user.Length-2);
-            string [] users_table_temp = Regex.Split(temp, ";");
+            string temp = Recive_message_user.Remove(Recive_message_user.Length - 2);
+            string[] users_table_temp = Regex.Split(temp, ";");
             users_table = Regex.Split(users_table_temp[1], "%1");
-                        
-             for (int i = 0; i < users_table.Length; i++)
-             {
-                 listBox.Items.Add(users_table[i]);
-             }
-            próba();
+
+            for (int i = 0; i < users_table.Length; i++)
+            {
+                listBox.Items.Add(users_table[i]);
+            }
+            //próba();
         }
 
         public void próba()
@@ -135,7 +135,7 @@ namespace SKS_Admin
         private void button2_Click(object sender, RoutedEventArgs e)
         {
             listBox.Items.Clear();
-            string [] help = null;
+            string[] help = null;
             Users user = new Users(2, client);
             string Recive_message_user = user.ReceiveMessage();
             string temp = Recive_message_user.Remove(Recive_message_user.Length - 2);
@@ -154,16 +154,16 @@ namespace SKS_Admin
 
         private void button3_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog op = new OpenFileDialog();
-            op.Title = "Select a picture";
-            op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" +
-              "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
-              "Portable Network Graphic (*.png)|*.png";
-            if (op.ShowDialog() == true)
-            {
-                image.Source = new BitmapImage(new Uri(op.FileName));
-            }
-            /*string curItem = listBox.SelectedItem.ToString();
+            /* OpenFileDialog op = new OpenFileDialog();
+             op.Title = "Select a picture";
+             op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" +
+               "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
+               "Portable Network Graphic (*.png)|*.png";
+             if (op.ShowDialog() == true)
+             {
+                 image.Source = new BitmapImage(new Uri(op.FileName));
+             }*/
+            string curItem = listBox.SelectedItem.ToString();
             if (curItem != null)
             {
                 string[] tab = Regex.Split(curItem, ":");
@@ -172,21 +172,24 @@ namespace SKS_Admin
                 client2.Connect(IP_End);
                 Client us = new Client(client2, "CONNECT", login, password);
                 us.ReceiveMessage();
-                new Thread(() => elo(us)).Start();
-            }*/
+
+                us.SendMessage("SCREENSHOT!$");
+                us.ReceiveMessageIMG();
+                image.Source = byteArrayToImage(us.get_byte());
+
+                //new Thread(() => elo(us)).Start();
+            }
         }
 
         public void elo(Client us)
         {
             while (true)
             {
-                Thread.Sleep(10000);
                 us.SendMessage("SCREENSHOT!$");
                 us.ReceiveMessageIMG();
                 Dispatcher.Invoke(() => { image.Source = byteArrayToImage(us.get_byte()); });
                 us.toBytes = null;
                 us.message_que.Clear();
-
                 //us.message_que = null;
             }
         }
@@ -255,64 +258,33 @@ namespace SKS_Admin
                 //if (!client2.Client.Connected)
                 //{
                 client2.Connect(IP_End);
-                    Client us = new Client(client2, "CONNECT", login, password);
-                    us.ReceiveMessage();
-                    
+                Client us = new Client(client2, "CONNECT", login, password);
+                us.ReceiveMessage();
+
                 //}
                 //Client us2 = new Client(client2);
-               us.SendMessage("MESSAGE;"+ textBox1.Text + "!$");
-              // us.SendMessage("DISCONNECT!$");
-                
+                us.SendMessage("MESSAGE;" + textBox1.Text + "!$");
+                // us.SendMessage("DISCONNECT!$");
+
                 //client2.Close();
-            }
-        }
-
-        private void SaveUsingEncoder(FrameworkElement visual, string fileName, BitmapEncoder encoder)
-        {
-            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)visual.ActualWidth, (int)visual.ActualHeight, 180, 180, PixelFormats.Pbgra32);
-            bitmap.Render(visual);
-            BitmapFrame frame = BitmapFrame.Create(bitmap);
-            encoder.Frames.Add(frame);
-
-            using (var stream = System.IO.File.Create(fileName))  //error
-            {
-                encoder.Save(stream);
             }
         }
 
         private void button6_Click(object sender, RoutedEventArgs e)
         {
-
+            Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog();
+            dialog.Filter = "Png Image|*.png";
+            dialog.ShowDialog();
+            if (dialog.FileName != "")
             {
-                Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog();
-                dialog.Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp|Png Image|*.png";
-                dialog.ShowDialog();
-                if (dialog.FileName != "")
-                {
-                    //System.IO.FileStream fs = (System.IO.FileStream)dialog.OpenFile();
-                    String nameOfFile = dialog.FileName;
-                    switch (dialog.FilterIndex)
-                    {
-                        case 1:
-                            JpegBitmapEncoder enJpeg = new JpegBitmapEncoder();
-                            SaveUsingEncoder(image, nameOfFile, enJpeg);
-                            MessageBox.Show("Picture Saved Successfully.");
-                            break;
-
-                        case 2:
-                            BmpBitmapEncoder enBmp = new BmpBitmapEncoder();
-                            SaveUsingEncoder(image, nameOfFile, enBmp);
-                            MessageBox.Show("Picture Saved Successfully.");
-                            break;
-
-                        case 3:
-                            PngBitmapEncoder enPng = new PngBitmapEncoder();
-                            SaveUsingEncoder(image, nameOfFile, enPng);
-                            MessageBox.Show("Picture Saved Successfully.");
-                            break;
-                    }
-                }
+                //System.IO.FileStream fs = (System.IO.FileStream)dialog.OpenFile();
+                String nameOfFile = dialog.FileName;
+                PngBitmapEncoder encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create((BitmapSource)image.Source));
+                using (FileStream stream = new FileStream(nameOfFile, FileMode.Create))
+                    encoder.Save(stream);
             }
+            MessageBox.Show("Screen został zapisany");
         }
     }
 }

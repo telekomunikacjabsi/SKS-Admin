@@ -102,15 +102,6 @@ namespace SKS_Admin
             return returndata.Substring(0, returndata.IndexOf('\0'));
         }
 
-         /*public byte[] ReceiveIMAGE()
-         {
-             NetworkStream str = client.GetStream();
-            // int x = client.ReceiveBufferSize();
-             byte[] inStream = new byte[85600];
-             str.Read(inStream, 0, 85600);
-             return inStream;
-         }*/
-
         public void ReceiveMessageIMG(bool recurrentCall = false)
         {
             NetworkStream stream = client.GetStream();
