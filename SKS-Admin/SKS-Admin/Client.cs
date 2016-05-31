@@ -33,11 +33,11 @@ namespace SKS_Admin
             this.client = client;
         }
 
-      /*  public Client(TcpClient client, string communicat)
-        {
-            this.communicat = communicat;
-            this.client = client;
-        }*/
+        /*  public Client(TcpClient client, string communicat)
+          {
+              this.communicat = communicat;
+              this.client = client;
+          }*/
 
         public Client(TcpClient client, string communicat)
         {
@@ -60,23 +60,23 @@ namespace SKS_Admin
         }
 
         public void screen()
-        {         
+        {
             try
             {
-                SendMessage(communicat);             
+                SendMessage(communicat);
             }
             catch (Exception)
             {
                 throw;
             }
         }
-        
+
         public void connect(TcpClient client)
         {
             try
             {
                 string help = CalculateSHA256(Encoding.UTF8.GetBytes(password), Encoding.UTF8.GetBytes(login));
-                String temp = "CONNECT;" + help  + "!$";
+                String temp = "CONNECT;" + help + "!$";
                 SendMessage(temp);
             }
             catch (Exception)
@@ -103,32 +103,66 @@ namespace SKS_Admin
         }
 
 
-        public void ReceiveMessageIMG()
+        public byte[] ReceiveMessageIMG() // dlaczego ta funkcja nie zwraca wyniku swojego dzialania? gdzie ona to zapisuje?
         {
             NetworkStream stream = client.GetStream();
-            byte[] bytes = new byte[256];
-            byte[] znak = Encoding.UTF8.GetBytes(";");
+            int dataLength = GetDataLength(client.GetStream());
+            toBytes = null;
+            byte[] bytes = new byte[dataLength];
+            stream.Read(bytes, 0, bytes.Length);
+            toBytes = bytes;
+            return bytes;
+            //File.WriteAllBytes("admin.txt", toBytes);
+
+
+            /*message = String.Empty;
+            NetworkStream stream = client.GetStream();
+            byte[] bytes = new byte[25];
+            byte znak = Encoding.UTF8.GetBytes(";")[0];
             int i;
             if ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
             {
-                int tmp = Array.IndexOf(bytes, znak[0]);
-                message = Encoding.UTF8.GetString(bytes, 0, tmp);
-                int stream_width = Int32.Parse(message);
-                ReceiveMessageIMG2(stream_width, stream);
+               int tmp = Array.IndexOf(bytes, znak);
+               File.WriteAllBytes("liczba.txt", bytes);
+               message = Encoding.UTF8.GetString(bytes, 0, tmp);
+               int stream_width = Int32.Parse(message);
+               ReceiveMessageIMG2(stream_width, stream); // co to znaczy IMG2?
+               //stream.Flush();
+            }    */
+        }
+
+        private int GetDataLength(NetworkStream stream)
+        {
+            Queue<byte> headerBytes = new Queue<byte>();
+            byte[] buffer = new byte[1];
+            byte argumentSeparator = Encoding.UTF8.GetBytes(";")[0];
+            while (stream.Read(buffer, 0, 1) >= 0)
+            {
+                if (buffer[0] == argumentSeparator)
+                    return BytesToInt(headerBytes.ToArray());
+                headerBytes.Enqueue(buffer[0]);
             }
+            throw new EndOfStreamException();
+        }
+
+        private int BytesToInt(byte[] bytes)
+        {
+            string numberString = Encoding.UTF8.GetString(bytes);
+            int number;
+            if (Int32.TryParse(numberString, out number))
+                return number;
+            else
+                throw new FormatException();
         }
 
         public void ReceiveMessageIMG2(int stream_width, NetworkStream stream)
         {
+            toBytes = null;
             byte[] bytes = new byte[stream_width];
             stream.Read(bytes, 0, bytes.Length);
-            for (int j = 0; j < bytes.Length; j++)
-            {
-                message_que.Add(bytes[j]);
-            }
-            toBytes = message_que.Concat(bytes).ToArray<byte>();
+            toBytes = bytes;
             File.WriteAllBytes("admin.txt", toBytes);
-            MessageBox.Show("");
+            //stream.Flush();
         }
 
         /*public void ReceiveMessageIMG(bool recurrentCall = false)

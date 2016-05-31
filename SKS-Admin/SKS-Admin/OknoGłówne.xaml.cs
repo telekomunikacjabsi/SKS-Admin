@@ -25,8 +25,6 @@ namespace SKS_Admin
         private string[] users_table;
         private string login;
         private string password;
-        private byte[] x = null;
-        private Thread th;
 
         public OknoGłówne(TcpClient client, string login, string password)
         {
@@ -74,7 +72,7 @@ namespace SKS_Admin
             {
                 listBox.Items.Add(users_table[i]);
             }
-            //próba();
+            próba();
         }
 
         public void próba()
@@ -85,6 +83,7 @@ namespace SKS_Admin
             client2.Connect(IP_End);
             Client us = new Client(client2, "CONNECT", login, password);
             us.ReceiveMessage();
+
             new Thread(() => elo(us)).Start();
         }
 
@@ -154,15 +153,6 @@ namespace SKS_Admin
 
         private void button3_Click(object sender, RoutedEventArgs e)
         {
-            /* OpenFileDialog op = new OpenFileDialog();
-             op.Title = "Select a picture";
-             op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" +
-               "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
-               "Portable Network Graphic (*.png)|*.png";
-             if (op.ShowDialog() == true)
-             {
-                 image.Source = new BitmapImage(new Uri(op.FileName));
-             }*/
             string curItem = listBox.SelectedItem.ToString();
             if (curItem != null)
             {
@@ -172,7 +162,6 @@ namespace SKS_Admin
                 client2.Connect(IP_End);
                 Client us = new Client(client2, "CONNECT", login, password);
                 us.ReceiveMessage();
-
                 us.SendMessage("SCREENSHOT!$");
                 us.ReceiveMessageIMG();
                 image.Source = byteArrayToImage(us.get_byte());
@@ -186,11 +175,8 @@ namespace SKS_Admin
             while (true)
             {
                 us.SendMessage("SCREENSHOT!$");
-                us.ReceiveMessageIMG();
-                Dispatcher.Invoke(() => { image.Source = byteArrayToImage(us.get_byte()); });
-                us.toBytes = null;
-                us.message_que.Clear();
-                //us.message_que = null;
+                Dispatcher.Invoke(() => { image.Source = byteArrayToImage(us.ReceiveMessageIMG()); });
+                Thread.Sleep(1200);
             }
         }
 
@@ -205,27 +191,6 @@ namespace SKS_Admin
                 image.StreamSource = stream;
                 image.EndInit();
             }
-            return image;
-        }
-
-        /*void picturebox1_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
-        {
-            System.Drawing.Bitmap bmp;
-            using (MemoryStream ms = new MemoryStream(x))
-            {
-               bmp = new System.Drawing.Bitmap(ms);
-            }
-            System.Drawing.Point ulPoint = new System.Drawing.Point(0, 0);
-            e.Graphics.DrawImage(bmp, ulPoint);
-        }*/
-
-        public BitmapImage ImageFromBuffer(Byte[] bytes)
-        {
-            MemoryStream stream = new MemoryStream(bytes);
-            BitmapImage image = new BitmapImage();
-            image.BeginInit();
-            image.StreamSource = stream;
-            image.EndInit();
             return image;
         }
 
@@ -285,6 +250,11 @@ namespace SKS_Admin
                     encoder.Save(stream);
             }
             MessageBox.Show("Screen został zapisany");
+        }
+
+        private void button7_Click_1(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
