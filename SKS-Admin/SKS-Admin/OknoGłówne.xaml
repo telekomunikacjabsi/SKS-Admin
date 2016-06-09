@@ -5,16 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SKS_Admin"
         mc:Ignorable="d"
-        Title="Panel sterowania laboratorium" Height="500" Width="1000" MinHeight="500" MaxHeight="500" MinWidth="1000" MaxWidth="1000">
-    <Grid>
-        <DockPanel HorizontalAlignment="Left" Height="60" LastChildFill="False" VerticalAlignment="Top" Width="992" Background="Black">
-            <Label x:Name="label" Content="Podgląd centralny" Height="60" VerticalAlignment="Top" FontSize="30" Foreground="White" Margin="350,1,0,0"/>
+        Title="Panel sterowania laboratorium" Height="700" Width="1299" MinHeight="700" MaxHeight="700" MinWidth="1300" MaxWidth="1300" Closing="Window_Closing">
+    <Grid Background="#FF303030">
+        <DockPanel HorizontalAlignment="Left" Height="60" LastChildFill="False" VerticalAlignment="Top" Width="1292" Background="Black">
+            <Label x:Name="label" Content="Podgląd centralny" Height="60" VerticalAlignment="Top" FontSize="30" Foreground="White" Margin="420,1,0,0"/>
         </DockPanel>
-        <DockPanel HorizontalAlignment="Left" Height="409" LastChildFill="False" Margin="0,60,0,0" VerticalAlignment="Top" Width="150" Background="#FF212121">
+        <DockPanel HorizontalAlignment="Left" Height="609" LastChildFill="False" Margin="0,60,0,0" VerticalAlignment="Top" Width="172" Background="#FF212121">
             <Button x:Name="button2" Content="Odśwież listę" Width="100" Margin="20,0,0,378" Height="25" VerticalAlignment="Bottom" FontSize="14" Click="button2_Click"/>
-            <Button x:Name="button3" Content="Połącz" Height="38" VerticalAlignment="Top" Width="75" Margin="-100,339,0,0" Click="button3_Click" FontSize="16"/>
         </DockPanel>
-        <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="284" Margin="10,100,10,0" VerticalAlignment="Top" Width="125" FontSize="14" FontWeight="Bold" FontStyle="Italic"/>
+        <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="528" Margin="10,100,0,0" VerticalAlignment="Top" Width="150" FontSize="13" FontWeight="Bold" FontStyle="Italic"/>
         <Label x:Name="L" Content="Klienci" HorizontalAlignment="Left" Margin="30,10,0,0" VerticalAlignment="Top" Width="89" Height="42" Background="#00000000" Foreground="White" FontSize="26.667" RenderTransformOrigin="0.5,0.5">
             <Label.RenderTransform>
                 <TransformGroup>
@@ -25,14 +24,12 @@
                 </TransformGroup>
             </Label.RenderTransform>
         </Label>
-        <DockPanel HorizontalAlignment="Left" Height="409" LastChildFill="False" Margin="756,60,0,0" VerticalAlignment="Top" Width="240" Background="#FF212121">
-            <RichTextBox x:Name="richTextBox" Height="253" VerticalAlignment="Top" Width="204" Margin="15,15,15,0">
-                <FlowDocument/>
-            </RichTextBox>
-            <Button x:Name="button" Content="Czarna lista" Height="40" VerticalAlignment="Top" Width="105" Margin="-125,350,0,0" Click="button_Click" FontSize="16"/>
-            <Button x:Name="button4" Content="Podgląd" Height="40" VerticalAlignment="Top" Width="105" Margin="-345,350,0,0" Click="button4_Click" FontSize="16"/>
+        <DockPanel HorizontalAlignment="Left" Height="610" LastChildFill="False" Margin="1052,59,0,0" VerticalAlignment="Top" Width="240" Background="#FF212121">
+            <Button x:Name="button" Content="Czarna lista" Height="40" VerticalAlignment="Top" Width="105" Margin="10,520,0,0" Click="button_Click" FontSize="16" Visibility="Hidden"/>
+            <Button x:Name="button4" Content="Podgląd" Height="40" VerticalAlignment="Top" Width="105" Margin="-50,520,0,0" Click="button4_Click" FontSize="16"/>
+            <ListBox x:Name="listBox1" Height="450" VerticalAlignment="Top" Width="198" Margin="-150,40,0,0"/>
         </DockPanel>
-        <Label x:Name="L_Copy" Content="Komunikaty" HorizontalAlignment="Left" Margin="802,7,0,0" VerticalAlignment="Top" Width="155" Height="48" Background="#00000000" Foreground="White" FontSize="26.667" RenderTransformOrigin="0.5,0.5">
+        <Label x:Name="L_Copy" Content="Komunikaty" HorizontalAlignment="Left" Margin="1112,6,0,0" VerticalAlignment="Top" Width="154" Height="48" Background="#00000000" Foreground="White" FontSize="26.667" RenderTransformOrigin="0.5,0.5">
             <Label.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -42,22 +39,73 @@
                 </TransformGroup>
             </Label.RenderTransform>
         </Label>
-        <Grid x:Name="czarna_grid" HorizontalAlignment="Left" Height="409" Margin="150,60,0,0" VerticalAlignment="Top" Width="606" Background="#FF303030">
-            <ListBox x:Name="list_czarna" HorizontalAlignment="Left" Height="244" Margin="30,47,0,0" VerticalAlignment="Top" Width="530"/>
+        <Grid x:Name="czarna_grid" HorizontalAlignment="Left" Height="609" Margin="226,-714,0,0" VerticalAlignment="Top" Width="880" Background="#FF303030">
+            <ListBox x:Name="list_czarna" HorizontalAlignment="Left" Height="411" Margin="30,47,0,0" VerticalAlignment="Top" Width="711" FontSize="16"/>
             <Label x:Name="label1" Content="Czarna lista" HorizontalAlignment="Left" Margin="30,10,0,0" VerticalAlignment="Top" FontSize="22" Width="148" Foreground="White"/>
-            <Button x:Name="button1" Content="Dodaj" HorizontalAlignment="Left" Margin="400,325,0,0" VerticalAlignment="Top" Width="74" Height="21" Click="button1_Click"/>
-            <Label x:Name="label2" Content="Dodaj link do czarnej listy" HorizontalAlignment="Left" Margin="30,295,0,0" VerticalAlignment="Top" FontSize="16" Foreground="White"/>
-            <Grid x:Name="Statystyki_grid" HorizontalAlignment="Left" Height="410" VerticalAlignment="Top" Width="606" Background="#FF303030" Margin="0,0,0,-1">
-                <Label x:Name="label3" Content="Podgląd stanowiska studenta" HorizontalAlignment="Left" Margin="53,10,0,0" VerticalAlignment="Top" Width="283" FontSize="20" Foreground="White"/>
-                <TextBox x:Name="textBox1" HorizontalAlignment="Left" Height="24" Margin="53,362,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="340" FontSize="14"/>
-                <Button x:Name="button5" Content="Wyślij" HorizontalAlignment="Left" Margin="419,362,0,0" VerticalAlignment="Top" Width="90" Height="24" FontSize="14" Click="button5_Click"/>
-                <Label x:Name="label3_Copy" Content="Wyślij ostrzeżenie:" HorizontalAlignment="Left" Margin="53,318,0,0" VerticalAlignment="Top" Width="185" FontSize="20" Foreground="White"/>
-                <Image x:Name="image" HorizontalAlignment="Left" Height="253" Margin="28,65,0,0" VerticalAlignment="Top" Width="450"/>
-                <Button x:Name="button6" Content="Zapisz" HorizontalAlignment="Left" Margin="501,77,0,0" VerticalAlignment="Top" Width="80" Click="button6_Click"/>
-                <Button x:Name="button7" Content="Zatrzymaj" HorizontalAlignment="Left" Margin="501,117,0,0" VerticalAlignment="Top" Width="80" Click="button7_Click_1"/>
+            <Button x:Name="button1" Content="Dodaj" HorizontalAlignment="Left" Margin="400,530,0,0" VerticalAlignment="Top" Width="74" Height="22" Click="button1_Click"/>
+            <Label x:Name="label2" Content="Dodaj link do czarnej listy" HorizontalAlignment="Left" Margin="30,486,0,0" VerticalAlignment="Top" FontSize="16" Foreground="White"/>
+            <Grid x:Name="Statystyki_grid" HorizontalAlignment="Left" Height="610" VerticalAlignment="Top" Width="880" Background="#FF303030" Margin="-53,774,0,-775" Visibility="Hidden">
+                <Image x:Name="image" HorizontalAlignment="Left" Height="521" Margin="10,10,0,0" VerticalAlignment="Top" Width="857"/>
+                <Button x:Name="button6" Content="Zapisz" HorizontalAlignment="Left" Margin="559,536,0,0" VerticalAlignment="Top" Width="116" Click="button6_Click" Height="29" Visibility="Hidden"/>
+                <Button x:Name="button7" Content="Stop" HorizontalAlignment="Left" Margin="698,536,0,0" VerticalAlignment="Top" Width="116" Click="button7_Click_1" Height="29" Visibility="Hidden"/>
             </Grid>
         </Grid>
-        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="180,385,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="322" TextChanged="textBox_TextChanged" FontSize="13" Visibility="Hidden"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="24" Margin="190,588,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="322" TextChanged="textBox_TextChanged" FontSize="13" Visibility="Hidden"/>
+        <ScrollViewer x:Name="Scroll" Margin="177,60,235,0">
+            <Grid x:Name="MainWindow" HorizontalAlignment="Left" Height="2500" VerticalAlignment="Top" Width="870" Background="#FF303030">
+                <TextBox x:Name="textBox1" HorizontalAlignment="Left" Height="34" Margin="220,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="500" FontSize="14"/>
+                <Button x:Name="button5" Content="Wyślij" HorizontalAlignment="Left" Margin="744,22,0,0" VerticalAlignment="Top" Width="90" Height="34" FontSize="14" Click="button5_Click"/>
+                <Label x:Name="label3_Copy" Content="Wyślij ostrzeżenie:" HorizontalAlignment="Left" Margin="10,19,0,0" VerticalAlignment="Top" Width="185" FontSize="20" Foreground="White"/>
+                <Image x:Name="image_Copy" HorizontalAlignment="Left" Height="196" Margin="34,120,0,0" VerticalAlignment="Top" Width="349"/>
+                <Image x:Name="image_Copy1" HorizontalAlignment="Left" Height="196" Margin="467,120,0,0" VerticalAlignment="Top" Width="349"/>
+                <Image x:Name="image_Copy2" HorizontalAlignment="Left" Height="196" Margin="34,400,0,0" VerticalAlignment="Top" Width="349"/>
+                <Image x:Name="image_Copy3" HorizontalAlignment="Left" Height="196" Margin="467,400,0,0" VerticalAlignment="Top" Width="349"/>
+                <Image x:Name="image_Copy4" HorizontalAlignment="Left" Height="196" Margin="34,680,0,0" VerticalAlignment="Top" Width="349"/>
+                <Image x:Name="image_Copy5" HorizontalAlignment="Left" Height="196" Margin="467,680,0,0" VerticalAlignment="Top" Width="349"/>
+                <Image x:Name="image_Copy6" HorizontalAlignment="Left" Height="196" Margin="34,960,0,0" VerticalAlignment="Top" Width="349"/>
+                <Image x:Name="image_Copy7" HorizontalAlignment="Left" Height="196" Margin="467,960,0,0" VerticalAlignment="Top" Width="349"/>
+                <Image x:Name="image_Copy8" HorizontalAlignment="Left" Height="196" Margin="34,1240,0,0" VerticalAlignment="Top" Width="349"/>
+                <Image x:Name="image_Copy9" HorizontalAlignment="Left" Height="196" Margin="467,1240,0,0" VerticalAlignment="Top" Width="349"/>
+                <Image x:Name="image_Copy10" HorizontalAlignment="Left" Height="196" Margin="34,1520,0,0" VerticalAlignment="Top" Width="349"/>
+                <Image x:Name="image_Copy11" HorizontalAlignment="Left" Height="196" Margin="467,1520,0,0" VerticalAlignment="Top" Width="349"/>
+                <Image x:Name="image_Copy12" HorizontalAlignment="Left" Height="196" Margin="34,1800,0,0" VerticalAlignment="Top" Width="349"/>
+                <Image x:Name="image_Copy13" HorizontalAlignment="Left" Height="196" Margin="467,1800,0,0" VerticalAlignment="Top" Width="349"/>
+                <Image x:Name="image_Copy14" HorizontalAlignment="Left" Height="196" Margin="34,2080,0,0" VerticalAlignment="Top" Width="349"/>
+                <Image x:Name="image_Copy15" HorizontalAlignment="Left" Height="196" Margin="467,2080,0,0" VerticalAlignment="Top" Width="349"/>
+                <Label x:Name="label_image1" Content="Offline" HorizontalAlignment="Left" Margin="34,89,0,0" VerticalAlignment="Top" Foreground="White" FontSize="16"/>
+                <Label x:Name="label_image2" Content="Offline" HorizontalAlignment="Left" Margin="467,89,0,0" VerticalAlignment="Top" Foreground="White" FontSize="16"/>
+                <Label x:Name="label_image3" Content="Offline" HorizontalAlignment="Left" Margin="34,369,0,0" VerticalAlignment="Top" Foreground="White" FontSize="16"/>
+                <Label x:Name="label_image4" Content="Offline" HorizontalAlignment="Left" Margin="467,369,0,0" VerticalAlignment="Top" Foreground="White" FontSize="16"/>
+                <Label x:Name="label_image5" Content="Offline" HorizontalAlignment="Left" Margin="34,649,0,0" VerticalAlignment="Top" Foreground="White" FontSize="16"/>
+                <Label x:Name="label_image6" Content="Offline" HorizontalAlignment="Left" Margin="467,649,0,0" VerticalAlignment="Top" Foreground="White" FontSize="16"/>
+                <Label x:Name="label_image7" Content="Offline" HorizontalAlignment="Left" Margin="34,929,0,0" VerticalAlignment="Top" Foreground="White" FontSize="16"/>
+                <Label x:Name="label_image8" Content="Offline" HorizontalAlignment="Left" Margin="467,929,0,0" VerticalAlignment="Top" Foreground="White" FontSize="16"/>
+                <Label x:Name="label_image9" Content="Offline" HorizontalAlignment="Left" Margin="34,1209,0,0" VerticalAlignment="Top" Foreground="White" FontSize="16"/>
+                <Label x:Name="label_image10" Content="Offline" HorizontalAlignment="Left" Margin="467,1209,0,0" VerticalAlignment="Top" Foreground="White" FontSize="16"/>
+                <Label x:Name="label_image11" Content="Offline" HorizontalAlignment="Left" Margin="34,1489,0,0" VerticalAlignment="Top" Foreground="White" FontSize="16"/>
+                <Label x:Name="label_image12" Content="Offline" HorizontalAlignment="Left" Margin="467,1489,0,0" VerticalAlignment="Top" Foreground="White" FontSize="16"/>
+                <Label x:Name="label_image13" Content="Offline" HorizontalAlignment="Left" Margin="34,1769,0,0" VerticalAlignment="Top" Foreground="White" FontSize="16"/>
+                <Label x:Name="label_image14" Content="Offline" HorizontalAlignment="Left" Margin="467,1769,0,0" VerticalAlignment="Top" Foreground="White" FontSize="16"/>
+                <Label x:Name="label_image15" Content="Offline" HorizontalAlignment="Left" Margin="34,2049,0,0" VerticalAlignment="Top" Foreground="White" FontSize="16"/>
+                <Label x:Name="label_image16" Content="Offline" HorizontalAlignment="Left" Margin="467,2049,0,0" VerticalAlignment="Top" Foreground="White" FontSize="16"/>
+                <Button x:Name="button8" Content="Przełącz" HorizontalAlignment="Left" Margin="170,320,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click_1"/>
+                <Button x:Name="button8_Copy" Content="Przełącz" HorizontalAlignment="Left" Margin="613,320,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click_2"/>
+                <Button x:Name="button8_Copy1" Content="Przełącz" HorizontalAlignment="Left" Margin="170,600,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click_3"/>
+                <Button x:Name="button8_Copy2" Content="Przełącz" HorizontalAlignment="Left" Margin="613,600,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click_4"/>
+                <Button x:Name="button8_Copy3" Content="Przełącz" HorizontalAlignment="Left" Margin="170,880,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click_5"/>
+                <Button x:Name="button8_Copy4" Content="Przełącz" HorizontalAlignment="Left" Margin="613,880,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click_6"/>
+                <Button x:Name="button8_Copy5" Content="Przełącz" HorizontalAlignment="Left" Margin="170,1160,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click_7"/>
+                <Button x:Name="button8_Copy6" Content="Przełącz" HorizontalAlignment="Left" Margin="613,1160,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click_8"/>
+                <Button x:Name="button8_Copy7" Content="Przełącz" HorizontalAlignment="Left" Margin="170,1440,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click_9"/>
+                <Button x:Name="button8_Copy8" Content="Przełącz" HorizontalAlignment="Left" Margin="613,1440,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click_10"/>
+                <Button x:Name="button8_Copy9" Content="Przełącz" HorizontalAlignment="Left" Margin="170,1720,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click_11"/>
+                <Button x:Name="button8_Copy10" Content="Przełącz" HorizontalAlignment="Left" Margin="613,1720,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click_12"/>
+                <Button x:Name="button8_Copy11" Content="Przełącz" HorizontalAlignment="Left" Margin="170,2000,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click_13"/>
+                <Button x:Name="button8_Copy12" Content="Przełącz" HorizontalAlignment="Left" Margin="613,2000,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click_14"/>
+                <Button x:Name="button8_Copy13" Content="Przełącz" HorizontalAlignment="Left" Margin="170,2280,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click_15"/>
+                <Button x:Name="button8_Copy14" Content="Przełącz" HorizontalAlignment="Left" Margin="613,2280,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click_16"/>
+            </Grid>
+        </ScrollViewer>
 
     </Grid>
 </Window>

@@ -8,17 +8,18 @@ using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
+using System.Windows.Threading;
 
 namespace SKS_Admin
 {
     public class Client
     {
-        private TcpClient client;
+        public TcpClient client;
         private string login;
         private string password;
         private string communicat;
@@ -28,30 +29,14 @@ namespace SKS_Admin
         public byte[] bytessss = null;
         public List<byte> message_que = new List<byte>();
 
-        public Client(TcpClient client)
-        {
-            this.client = client;
-        }
 
-        /*  public Client(TcpClient client, string communicat)
-          {
-              this.communicat = communicat;
-              this.client = client;
-          }*/
-
-        public Client(TcpClient client, string communicat)
-        {
-            this.communicat = communicat;
-            this.client = client;
-            screen();
-        }
-
-        public Client(TcpClient client, string communicat, string login, string password)
+        public Client(string ip, string port, string login, string password)
         {
             this.login = login;
             this.password = password;
-            this.client = client;
-            connect(client);
+            client = new TcpClient();
+            IPEndPoint IP_End = new IPEndPoint(IPAddress.Parse(ip), int.Parse(port));
+            client.Connect(IP_End);
         }
 
         public byte[] get_byte()
@@ -71,7 +56,7 @@ namespace SKS_Admin
             }
         }
 
-        public void connect(TcpClient client)
+        public void connect()
         {
             try
             {
@@ -87,9 +72,16 @@ namespace SKS_Admin
 
         public void SendMessage(String temp)
         {
-            NetworkStream stream = client.GetStream();
-            byte[] message = Encoding.UTF8.GetBytes(temp);
-            stream.Write(message, 0, message.Length);
+            try
+            {
+                NetworkStream stream = client.GetStream();
+                byte[] message = Encoding.UTF8.GetBytes(temp);
+                stream.Write(message, 0, message.Length);
+            }
+            catch (Exception)
+            {
+                return;
+            }
         }
 
         public string ReceiveMessage()
@@ -99,11 +91,12 @@ namespace SKS_Admin
             str.Read(inStream, 0, 255);
             string returndata = Encoding.UTF8.GetString(inStream);
             //MessageBox.Show("(Class Client)"+returndata);
+            str.Flush();
             return returndata.Substring(0, returndata.IndexOf('\0'));
         }
 
 
-        public byte[] ReceiveMessageIMG() // dlaczego ta funkcja nie zwraca wyniku swojego dzialania? gdzie ona to zapisuje?
+        public byte[] ReceiveMessageIMG() 
         {
             NetworkStream stream = client.GetStream();
             int dataLength = GetDataLength(client.GetStream());
@@ -112,23 +105,6 @@ namespace SKS_Admin
             stream.Read(bytes, 0, bytes.Length);
             toBytes = bytes;
             return bytes;
-            //File.WriteAllBytes("admin.txt", toBytes);
-
-
-            /*message = String.Empty;
-            NetworkStream stream = client.GetStream();
-            byte[] bytes = new byte[25];
-            byte znak = Encoding.UTF8.GetBytes(";")[0];
-            int i;
-            if ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-            {
-               int tmp = Array.IndexOf(bytes, znak);
-               File.WriteAllBytes("liczba.txt", bytes);
-               message = Encoding.UTF8.GetString(bytes, 0, tmp);
-               int stream_width = Int32.Parse(message);
-               ReceiveMessageIMG2(stream_width, stream); // co to znaczy IMG2?
-               //stream.Flush();
-            }    */
         }
 
         private int GetDataLength(NetworkStream stream)
@@ -161,41 +137,9 @@ namespace SKS_Admin
             byte[] bytes = new byte[stream_width];
             stream.Read(bytes, 0, bytes.Length);
             toBytes = bytes;
-            File.WriteAllBytes("admin.txt", toBytes);
+            //File.WriteAllBytes("admin.txt", toBytes);
             //stream.Flush();
         }
-
-        /*public void ReceiveMessageIMG(bool recurrentCall = false)
-        {
-            NetworkStream stream = client.GetStream();
-            int i;
-            bool EndPart = false;
-            byte [] znak = Encoding.UTF8.GetBytes("!$");
-            byte[] bytes = new byte[256];
-            if ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-            {
-                for (int j = 0; j < bytes.Length; j++)
-                {
-                    message_que.Add(bytes[j]);
-                    if (j < bytes.Length-1)
-                    {
-                        if (bytes[j] == znak[0] && bytes[j + 1] == znak[1])
-                        {
-                            EndPart = true;
-                        }
-                    }
-                }
-                //message_que.CopyTo(bytes, 0);
-                if (EndPart == false) // jeśli odczytana wiadomość nie zawiera znacznika końca wiadomości
-                    ReceiveMessageIMG(true);
-                if (recurrentCall)
-                    return;
-            }
-            toBytes = message_que.Concat(bytes).ToArray<byte>();
-            //string[] users_table_temp = Regex.Split(message, ";");
-            //toBytes = Encoding.UTF8.GetBytes(bytes);
-            File.WriteAllBytes("admin.txt", toBytes);
-        }*/
 
         private string CalculateSHA256(byte[] text, byte[] salt)
         {
@@ -233,31 +177,3 @@ namespace SKS_Admin
 
     }
 }
-
-
-
-
-
-/*
-public void ReceiveMessageIMG(bool recurrentCall = false)
-{
-    NetworkStream stream = client.GetStream();
-    string[] messages = null;
-    int i;
-    byte[] bytes = new byte[256];
-    if ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-    {
-        message += Encoding.UTF8.GetString(bytes, 0, i);
-        if (message.IndexOf(packetEndSign) == -1) // jeśli odczytana wiadomość nie zawiera znacznika końca wiadomości
-            ReceiveMessageIMG(true);
-        if (recurrentCall)
-            return;
-        messages = SplitMessages(message);
-        message = messages[0];
-    }
-    string result = string.Join(string.Empty, message.Skip(11));
-    //string[] users_table_temp = Regex.Split(message, ";");
-    toBytes = Encoding.UTF8.GetBytes(result);
-    File.WriteAllBytes("admin.txt", toBytes);
-    MessageBox.Show(" ");
-}*/
