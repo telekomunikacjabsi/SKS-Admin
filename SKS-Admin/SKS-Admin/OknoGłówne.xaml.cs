@@ -218,7 +218,7 @@ namespace SKS_Admin
                 {
                     us.SendMessage("SCREENSHOT!$");
                     Dispatcher.Invoke(() => { try { ImageSource img = byteArrayToImage(us.ReceiveMessageIMG()); if (img == null) { IsBroken = true; return; } image.Source = img; } catch (Exception) {  return; }  });
-                    Thread.Sleep(1200);
+                    Thread.Sleep(1000);
                 }
             }
         }
@@ -228,7 +228,7 @@ namespace SKS_Admin
             IsStop = true;
             IsCancel = true;
             IsCancelSmall = true;
-            Thread.Sleep(500);
+            //Thread.Sleep(500);
             for (int i = 0; i < client_list.Count; i++)
             {
                 //client_list[i].SendMessage("DISCONNECT!$");
@@ -236,7 +236,7 @@ namespace SKS_Admin
             }
             client_list.Clear();
             name_clients.Clear();
-            Thread.Sleep(1000);
+            Thread.Sleep(1500);
             clear();
             GET_USERS();
         }
@@ -454,6 +454,7 @@ namespace SKS_Admin
         {
             try
             {
+                IsCancel = false;
                 new Thread(() => Getscreen(client_list[i])).Start();
             }
             catch (Exception)
@@ -465,17 +466,18 @@ namespace SKS_Admin
 
         public void SwitchBigVideo(int i)
         {
+            IsCancel = true;
             if (i >= client_list.Count)
             {
                 return;
             }
-            IsCancel = false;
             IsCancelSmall = true;
             this.Statystyki_grid.Visibility = System.Windows.Visibility.Visible;
             this.MainWindow.Visibility = System.Windows.Visibility.Hidden;
             this.Scroll.Visibility = System.Windows.Visibility.Hidden;
             this.button6.Visibility = System.Windows.Visibility.Visible;
             this.button7.Visibility = System.Windows.Visibility.Visible;
+            Thread.Sleep(1000);
             /*client_list[i].SendMessage("PROCESSES!$");
             string Recive_message = client_list[i].ReceiveMessage();
             string temp = Recive_message.Remove(Recive_message.Length - 2);
