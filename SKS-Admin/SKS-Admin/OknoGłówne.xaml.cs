@@ -25,8 +25,10 @@ namespace SKS_Admin
         public bool IsStop = false;
         public bool IsCancel = false;
         public bool IsCancelSmall = false;
+        public bool IsBroken = false;
         public List<Client> client_list;
         public List<string> name_clients;
+        
 
 
         public OknoGłówne(TcpClient client, string login, string password)
@@ -35,6 +37,7 @@ namespace SKS_Admin
             this.password = password;
             this.login = login;
             this.client = client;
+            client_list = new List<Client>();
             GET_USERS();
             SEARCHING_START();
         }
@@ -46,16 +49,20 @@ namespace SKS_Admin
 
         public void SEARCH_NEW_CLIENT()
         {
-            //Thread.Sleep(5000);
             while (true)
             {
                 Users user = new Users(2, client);
                 string Recive_message_user = user.ReceiveMessage();
-                if (Recive_message_user != "USERS;!$")
+                if (Recive_message_user != "USERS;!$" || IsBroken == true)
                 {
+                    IsStop = true;
+                    IsCancel = true;
+                    IsCancelSmall = true;
+                    //Thread.Sleep(500);
                     Dispatcher.Invoke(() => { refresh(); });
+                    IsBroken = false;
                 }
-                Thread.Sleep(20000);
+                Thread.Sleep(15000);
             }
         }
 
@@ -71,16 +78,16 @@ namespace SKS_Admin
             }
             string[] users_table_temp = Regex.Split(temp, ";");
             users_table = Regex.Split(users_table_temp[1], "%1");
-            IsStop = false;
-            IsCancel = false;
-            IsCancelSmall = false;
             conn_client(); //połączenie klientów z adminem
         }
 
         public void conn_client()
         {
+            IsStop = false;
+            IsCancel = false;
+            IsCancelSmall = false;
             name_clients = new List<string>();
-            client_list = new List<Client>();
+            client_list  = new List<Client>();
             int j = 1;
             for (int i = 0; i < users_table.Length; i++)
             {
@@ -96,23 +103,37 @@ namespace SKS_Admin
                 client_list.Add(cli);
                 j++;
             }
-            new Thread(() => SmallWindow()).Start();
-           // new Thread(() => Getscreen(client_list[0])).Start();
+            SmallWindows_start();
+        }
+
+        public void SmallWindows_start()
+        {
+            IsStop = false;
+            IsCancel = false;
+            IsCancelSmall = false;
+            try
+                {
+                new Thread(() => SmallWindow()).Start();
+            }
+            catch (Exception)
+            {
+                refresh();
+            }
         }
 
         public void SmallWindow()
         {
             while (true)
             {
+                if (IsCancelSmall == true)
+                {
+                    return;
+                }
                 for (int i = 0; i < client_list.Count; i++)
                 {
                     Getscreen_little(client_list[i], i);
                 }
-                /*if (IsCancelSmall == true)
-                {
-                    return;
-                }*/
-                Thread.Sleep(6000);
+                Thread.Sleep(5000);
             }
         }
 
@@ -121,12 +142,13 @@ namespace SKS_Admin
             IsStop = true;
             IsCancel = true;
             IsCancelSmall = true;
+            //Thread.Sleep(300);
             for (int i = 0; i < client_list.Count; i++)
             {
                 client_list[i].SendMessage("DISCONNECT!$");
             }
             clear();
-            Thread.Sleep(300);
+            //Thread.Sleep(300);
             GET_USERS();
         }
 
@@ -188,15 +210,15 @@ namespace SKS_Admin
         {
             while (true)
             {
-                if (IsStop == false)
-                {
-                    us.SendMessage("SCREENSHOT!$");
-                    Dispatcher.Invoke(() => {image.Source = byteArrayToImage(us.ReceiveMessageIMG()); });
-                    Thread.Sleep(1200);
-                }
                 if (IsCancel == true)
                 {
                     return;
+                }
+                if (IsStop == false)
+                {
+                    us.SendMessage("SCREENSHOT!$");
+                    Dispatcher.Invoke(() => { try { ImageSource img = byteArrayToImage(us.ReceiveMessageIMG()); if (img == null) { IsBroken = true; return; } image.Source = img; } catch (Exception) {  return; }  });
+                    Thread.Sleep(1200);
                 }
             }
         }
@@ -206,11 +228,15 @@ namespace SKS_Admin
             IsStop = true;
             IsCancel = true;
             IsCancelSmall = true;
+            Thread.Sleep(500);
             for (int i = 0; i < client_list.Count; i++)
             {
-                client_list[i].SendMessage("DISCONNECT!$");
+                //client_list[i].SendMessage("DISCONNECT!$");
+                client_list[i].client.Close();
             }
-            Thread.Sleep(500);
+            client_list.Clear();
+            name_clients.Clear();
+            Thread.Sleep(1000);
             clear();
             GET_USERS();
         }
@@ -225,48 +251,39 @@ namespace SKS_Admin
                 Dispatcher.Invoke(() => { listBox1.Items.Add("Odłączono: " + temp); });
                 return;
             }
+            byte[] x;
+            try
+            {
+                x = us.ReceiveMessageIMG();
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
             if (i == 0)
             {
-                Dispatcher.Invoke(() =>{ image_Copy.Source = byteArrayToImage(us.ReceiveMessageIMG()); });
+                Dispatcher.Invoke(() =>{ try { ImageSource img = byteArrayToImage(x); if (img == null) { IsBroken = true; return; } image_Copy.Source = img; } catch (Exception) { return; } });
                 Dispatcher.Invoke(() => { label_image1.Content = name_clients[i]; });
             }
             else if (i == 1)
             {
-                Dispatcher.Invoke(() =>
-                {
-                    try
-                    {
-                        image_Copy1.Source = byteArrayToImage(us.ReceiveMessageIMG());
-                    }
-                    catch (Exception)
-                    {
-                        return;
-                    }
-                     });
+                Dispatcher.Invoke(() =>{ try { ImageSource img = byteArrayToImage(x); if (img == null) { IsBroken = true; return; } image_Copy1.Source = img; } catch(Exception) { return; }  });
                 Dispatcher.Invoke(() => { label_image2.Content = name_clients[i]; });
             }
             else if (i == 2)
             {
-                Dispatcher.Invoke(() => {
-                    try
-                    {
-                        image_Copy2.Source = byteArrayToImage(us.ReceiveMessageIMG());
-                    }
-                    catch (Exception)
-                    {
-                        return ;
-                    }
-                     });
+                Dispatcher.Invoke(() => { try { ImageSource img = byteArrayToImage(x); if (img == null) { IsBroken = true; return; } image_Copy2.Source = img; } catch (Exception) { return; } });
                 Dispatcher.Invoke(() => { label_image3.Content = name_clients[i]; });
             }
             else if (i == 3)
             {
-                Dispatcher.Invoke(() => { image_Copy3.Source = byteArrayToImage(us.ReceiveMessageIMG()); });
+                Dispatcher.Invoke(() => { image_Copy3.Source = byteArrayToImage(x); });
                 Dispatcher.Invoke(() => { label_image4.Content = name_clients[i]; });
             }
             else if (i == 4)
             {
-                Dispatcher.Invoke(() => { image_Copy4.Source = byteArrayToImage(us.ReceiveMessageIMG()); });
+                Dispatcher.Invoke(() => { image_Copy4.Source = byteArrayToImage(x); });
                 Dispatcher.Invoke(() => { label_image5.Content = name_clients[i]; });
             }
             /*else if(i == 5)
@@ -301,11 +318,19 @@ namespace SKS_Admin
             BitmapImage image = null;
             if (byteArrayIn != null)
             {
-                MemoryStream stream = new MemoryStream(byteArrayIn);
-                image = new BitmapImage();
-                image.BeginInit();
-                image.StreamSource = stream;
-                image.EndInit();
+                try
+                {
+                    MemoryStream stream = new MemoryStream(byteArrayIn);
+                    image = new BitmapImage();
+                    image.BeginInit();
+                    image.StreamSource = stream;
+                    image.EndInit();
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+
             }
              return image;            
         }
@@ -318,6 +343,7 @@ namespace SKS_Admin
             this.button7.Visibility = System.Windows.Visibility.Hidden;
             this.Scroll.Visibility = System.Windows.Visibility.Visible;
             this.MainWindow.Visibility = System.Windows.Visibility.Visible;
+            SmallWindows_start();
         }
 
         private void button5_Click(object sender, RoutedEventArgs e)
@@ -336,6 +362,7 @@ namespace SKS_Admin
             {
                 MessageBox.Show("Zaznacz użytkownika do którego chcesz wysłać wiadomość.");
             }
+            textBox1.Text = "";
 
         }
 
@@ -425,7 +452,15 @@ namespace SKS_Admin
 
         public void START_BIG(int i)
         {
-            new Thread(() => Getscreen(client_list[i])).Start();
+            try
+            {
+                new Thread(() => Getscreen(client_list[i])).Start();
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
         }
 
         public void SwitchBigVideo(int i)
@@ -434,12 +469,13 @@ namespace SKS_Admin
             {
                 return;
             }
+            IsCancel = false;
+            IsCancelSmall = true;
             this.Statystyki_grid.Visibility = System.Windows.Visibility.Visible;
             this.MainWindow.Visibility = System.Windows.Visibility.Hidden;
             this.Scroll.Visibility = System.Windows.Visibility.Hidden;
             this.button6.Visibility = System.Windows.Visibility.Visible;
             this.button7.Visibility = System.Windows.Visibility.Visible;
-            IsCancel = false;
             /*client_list[i].SendMessage("PROCESSES!$");
             string Recive_message = client_list[i].ReceiveMessage();
             string temp = Recive_message.Remove(Recive_message.Length - 2);
@@ -529,29 +565,3 @@ namespace SKS_Admin
     }
 }
 
-
-
-//$$$$$$$$$$$$$$$$$  DO ŁĄCZENIA SIĘ Z KLIENTAMI
-/*
-        public Users(TcpClient client, string communicat, string login, string password)
-        {
-            this.login = login;
-            this.password = password;
-            this.client = client;
-            connect2(client);
-        }
-
-        public void connect2(TcpClient client)
-        {
-            try
-            {
-                string help = CalculateSHA256(Encoding.UTF8.GetBytes(password), Encoding.UTF8.GetBytes(login));
-                String temp = "CONNECT;"  + help + ";1900!$";
-                SendMessage(temp);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-    */

@@ -28,6 +28,7 @@ namespace SKS_Admin
         public byte[] toBytes = null;
         public byte[] bytessss = null;
         public List<byte> message_que = new List<byte>();
+        public NetworkStream stream;
 
 
         public Client(string ip, string port, string login, string password)
@@ -37,6 +38,7 @@ namespace SKS_Admin
             client = new TcpClient();
             IPEndPoint IP_End = new IPEndPoint(IPAddress.Parse(ip), int.Parse(port));
             client.Connect(IP_End);
+            stream = client.GetStream();
         }
 
         public byte[] get_byte()
@@ -84,26 +86,51 @@ namespace SKS_Admin
             }
         }
 
-        public string ReceiveMessage()
+        /*public string ReceiveMessage()
         {
             NetworkStream str = client.GetStream();
             byte[] inStream = new byte[255];
             str.Read(inStream, 0, 255);
             string returndata = Encoding.UTF8.GetString(inStream);
+            returndata += "\0";
             //MessageBox.Show("(Class Client)"+returndata);
             str.Flush();
             return returndata.Substring(0, returndata.IndexOf('\0'));
-        }
+        }*/
 
+        public string ReceiveMessage(bool recurrentCall = false)
+        {
+            string[] messages = null;
+            int i;
+            byte[] bytes = new byte[256];
+            if ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
+            {
+                message += Encoding.UTF8.GetString(bytes, 0, i);
+                if (message.IndexOf(packetEndSign) == -1) // jeśli odczytana wiadomość nie zawiera znacznika końca wiadomości
+                    ReceiveMessage(true);
+                if (recurrentCall)
+                    return message;
+                messages = SplitMessages(message);
+                message = messages[0];
+            }
+            stream.Flush();
+            return message;
+        }
 
         public byte[] ReceiveMessageIMG() 
         {
             NetworkStream stream = client.GetStream();
             int dataLength = GetDataLength(client.GetStream());
-            toBytes = null;
+            if (dataLength == 0)
+            {
+                byte[] x = { 0};
+                return x;
+            }
+            //toBytes = null;
             byte[] bytes = new byte[dataLength];
             stream.Read(bytes, 0, bytes.Length);
-            toBytes = bytes;
+            //toBytes = bytes;
+            stream.Flush();
             return bytes;
         }
 
@@ -128,17 +155,8 @@ namespace SKS_Admin
             if (Int32.TryParse(numberString, out number))
                 return number;
             else
-                throw new FormatException();
-        }
-
-        public void ReceiveMessageIMG2(int stream_width, NetworkStream stream)
-        {
-            toBytes = null;
-            byte[] bytes = new byte[stream_width];
-            stream.Read(bytes, 0, bytes.Length);
-            toBytes = bytes;
-            //File.WriteAllBytes("admin.txt", toBytes);
-            //stream.Flush();
+                return 0;
+               // throw new FormatException();
         }
 
         private string CalculateSHA256(byte[] text, byte[] salt)
