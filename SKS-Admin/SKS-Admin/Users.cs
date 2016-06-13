@@ -72,7 +72,7 @@ namespace SKS_Admin
                 else if (kom_inf == 4)
                 {
                     String temp = communicat;
-                    MessageBox.Show(new_item);
+                    //MessageBox.Show(new_item);
                     SendMessage("LIST;" + 0 + ";" + new_item+"!$");
                 }
             }

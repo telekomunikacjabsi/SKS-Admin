@@ -28,9 +28,8 @@ namespace SKS_Admin
         public bool IsBroken = false;
         public List<Client> client_list;
         public List<string> name_clients;
+        public List<string> procces_list;
         
-
-
         public OknoGłówne(TcpClient client, string login, string password)
         {
             InitializeComponent();
@@ -62,8 +61,32 @@ namespace SKS_Admin
                     Dispatcher.Invoke(() => { refresh(); });
                     IsBroken = false;
                 }
-                Thread.Sleep(15000);
+                Thread.Sleep(10000);
             }
+        }
+
+        public void Get_PROCCES()
+        {
+            procces_list = new List<string>();
+            for (int i = 0; i < client_list.Count; i++)
+            {
+                client_list[i].SendMessage("PROCESSES!$");
+                string Recive_message_user = client_list[i].ReceiveMessage();
+                string temp = Recive_message_user.Remove(Recive_message_user.Length - 2);
+                procces_list.Add(temp);
+            }
+        }
+
+        public void Set_Procces(int x)
+        {
+            //MessageBox.Show(procces_list[i]);
+            listBox2.Items.Clear();
+            string[] procces_table_temp = Regex.Split(procces_list[x], ";");
+            for (int i = 3; i < procces_table_temp.Length; i++)
+            {
+                listBox2.Items.Add(procces_table_temp[i]);
+            }
+            //users_table = Regex.Split(users_table_temp[1], "%1");
         }
 
         private void GET_USERS()
@@ -103,6 +126,7 @@ namespace SKS_Admin
                 client_list.Add(cli);
                 j++;
             }
+            Get_PROCCES();
             SmallWindows_start();
         }
 
@@ -482,7 +506,7 @@ namespace SKS_Admin
             string Recive_message = client_list[i].ReceiveMessage();
             string temp = Recive_message.Remove(Recive_message.Length - 2);
             MessageBox.Show(temp);*/
-            Dispatcher.Invoke(() => { START_BIG(i); });
+            Dispatcher.Invoke(() => { START_BIG(i); Set_Procces(i); });
         }
 
         private void button8_Click_1(object sender, RoutedEventArgs e)
@@ -563,6 +587,18 @@ namespace SKS_Admin
         private void button8_Click_16(object sender, RoutedEventArgs e)
         {
             SwitchBigVideo(15);
+        }
+
+        private void button3_Click(object sender, RoutedEventArgs e)
+        {
+            this.listproces.Visibility = System.Windows.Visibility.Visible;
+            this.button9.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void button9_Click(object sender, RoutedEventArgs e)
+        {
+            this.listproces.Visibility = System.Windows.Visibility.Hidden;
+            this.button9.Visibility = System.Windows.Visibility.Hidden;
         }
     }
 }

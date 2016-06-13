@@ -44,11 +44,12 @@
             <Label x:Name="label1" Content="Czarna lista" HorizontalAlignment="Left" Margin="30,10,0,0" VerticalAlignment="Top" FontSize="22" Width="148" Foreground="White"/>
             <Button x:Name="button1" Content="Dodaj" HorizontalAlignment="Left" Margin="400,530,0,0" VerticalAlignment="Top" Width="74" Height="22" Click="button1_Click"/>
             <Label x:Name="label2" Content="Dodaj link do czarnej listy" HorizontalAlignment="Left" Margin="30,486,0,0" VerticalAlignment="Top" FontSize="16" Foreground="White"/>
-            <Grid x:Name="Statystyki_grid" HorizontalAlignment="Left" Height="610" VerticalAlignment="Top" Width="880" Background="#FF303030" Margin="-53,774,0,-775" Visibility="Hidden">
-                <Image x:Name="image" HorizontalAlignment="Left" Height="521" Margin="10,10,0,0" VerticalAlignment="Top" Width="857"/>
-                <Button x:Name="button6" Content="Zapisz" HorizontalAlignment="Left" Margin="559,536,0,0" VerticalAlignment="Top" Width="116" Click="button6_Click" Height="29" Visibility="Hidden"/>
-                <Button x:Name="button7" Content="Stop" HorizontalAlignment="Left" Margin="698,536,0,0" VerticalAlignment="Top" Width="116" Click="button7_Click_1" Height="29" Visibility="Hidden"/>
-            </Grid>
+        </Grid>
+        <Grid x:Name="Statystyki_grid" HorizontalAlignment="Left" Height="610" VerticalAlignment="Top" Width="880" Background="#FF303030" Margin="172,60,0,-1">
+            <Image x:Name="image" HorizontalAlignment="Left" Height="521" Margin="10,10,0,0" VerticalAlignment="Top" Width="857"/>
+            <Button x:Name="button6" Content="Zapisz" HorizontalAlignment="Left" Margin="559,536,0,0" VerticalAlignment="Top" Width="116" Click="button6_Click" Height="29"/>
+            <Button x:Name="button7" Content="Stop" HorizontalAlignment="Left" Margin="698,536,0,0" VerticalAlignment="Top" Width="116" Click="button7_Click_1" Height="29"/>
+            <Button x:Name="button3" Content="Lista procesów" HorizontalAlignment="Left" Margin="427,536,0,0" VerticalAlignment="Top" Width="116" Height="29" Click="button3_Click"/>
         </Grid>
         <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="24" Margin="190,588,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="322" TextChanged="textBox_TextChanged" FontSize="13" Visibility="Hidden"/>
         <ScrollViewer x:Name="Scroll" Margin="177,60,235,0">
@@ -106,6 +107,11 @@
                 <Button x:Name="button8_Copy14" Content="Przełącz" HorizontalAlignment="Left" Margin="613,2280,0,0" VerticalAlignment="Top" Width="75" Click="button8_Click_16"/>
             </Grid>
         </ScrollViewer>
+        <Grid x:Name="listproces" HorizontalAlignment="Left" Height="100" Margin="172,59,0,0" VerticalAlignment="Top" Width="880" Background="#FF303030" MinHeight="610" Visibility="Hidden">
+            <Label x:Name="label_Copy" Content="Lista procesów" Height="60" VerticalAlignment="Top" FontSize="24" Foreground="White" Margin="56,28,575,0"/>
+            <ListBox x:Name="listBox2" HorizontalAlignment="Left" Height="444" Margin="56,88,0,0" VerticalAlignment="Top" Width="774"/>
+            <Button x:Name="button9" Content="Zamknij" HorizontalAlignment="Left" Margin="718,556,0,0" VerticalAlignment="Top" Width="112" Height="30" Click="button9_Click"/>
+        </Grid>
 
     </Grid>
 </Window>

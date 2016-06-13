@@ -113,7 +113,7 @@ namespace SKS_Admin
                 messages = SplitMessages(message);
                 message = messages[0];
             }
-            stream.Flush();
+            //stream.Flush();
             return message;
         }
 
