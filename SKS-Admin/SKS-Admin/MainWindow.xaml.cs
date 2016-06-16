@@ -39,6 +39,9 @@ namespace SKS_Admin
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
+            string serverIP = textBox_Copy.Text;
+            IPAddress address;
+
             if (textBox.Text.ToString() == "")
             {
                 MessageBox.Show("Wproadź nazwę grupy!");
@@ -51,37 +54,38 @@ namespace SKS_Admin
                 return;
             }
 
-            TcpClient client = new TcpClient();
-            IPEndPoint IP_End = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000);
-
-            try
+            if (IPAddress.TryParse(serverIP, out address))
             {
-                client.Connect(IP_End);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Problem połączenia z serwerem!");
-                return;
-            }
-
-            string password = passwordBox.Password;
-
-            Users user_login = new Users(1, textBox.Text, password, client);
-            string Recive_message = user_login.ReceiveMessage();
-
-            if (Recive_message == "AUTH;SUCCESS!$")
+                try
                 {
-                    OknoGłówne ok = new OknoGłówne(client, textBox.Text, password);
-                    ok.Show();                   
-                    this.Close();
-                    //stream.Close();
+                    TcpClient client = new TcpClient(textBox_Copy.Text, 5000);
+                    string password = passwordBox.Password;
+
+                    Users user_login = new Users(1, textBox.Text, password, client);
+                    string Recive_message = user_login.ReceiveMessage();
+
+                    if (Recive_message == "AUTH;SUCCESS!$")
+                    {
+                        OknoGłówne ok = new OknoGłówne(client, textBox.Text, password);
+                        ok.Show();
+                        this.Close();
+                        //stream.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error . . .");
+                        this.Close();
+                        return;
+                    }
                 }
-                else
+                catch (Exception)
                 {
-                    MessageBox.Show("Error . . .");
-                    this.Close();
+                    MessageBox.Show("Problem połączenia z serwerem!");
                     return;
-                }    
+                }
+            }
+
+          
         }
 
         private void textBox1_TextChanged(object sender, TextChangedEventArgs e)

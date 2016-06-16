@@ -61,7 +61,7 @@ namespace SKS_Admin
                     Dispatcher.Invoke(() => { refresh(); });
                     IsBroken = false;
                 }
-                Thread.Sleep(10000);
+                Thread.Sleep(8000);
             }
         }
 
@@ -118,8 +118,7 @@ namespace SKS_Admin
                 Client cli = new Client(tab[0], tab[1], login, password);
                 cli.connect();
                 string x = cli.ReceiveMessage();
-                string temp = x.Remove(x.Length - 2);
-                string[] name_table = Regex.Split(temp, ";");
+                string[] name_table = Regex.Split(x, ";");
                 name_clients.Add(name_table[2]);
                 listBox1.Items.Add("Połączono: "+name_table[2]);
                 listBox.Items.Add(j + ". " +name_table[2]);
@@ -302,39 +301,69 @@ namespace SKS_Admin
             }
             else if (i == 3)
             {
-                Dispatcher.Invoke(() => { image_Copy3.Source = byteArrayToImage(x); });
+                Dispatcher.Invoke(() => { try { ImageSource img = byteArrayToImage(x); if (img == null) { IsBroken = true; return; } image_Copy3.Source = img; } catch (Exception) { return; } });
                 Dispatcher.Invoke(() => { label_image4.Content = name_clients[i]; });
             }
             else if (i == 4)
             {
-                Dispatcher.Invoke(() => { image_Copy4.Source = byteArrayToImage(x); });
+                Dispatcher.Invoke(() => { try { ImageSource img = byteArrayToImage(x); if (img == null) { IsBroken = true; return; } image_Copy4.Source = img; } catch (Exception) { return; } });
                 Dispatcher.Invoke(() => { label_image5.Content = name_clients[i]; });
             }
-            /*else if(i == 5)
-                Dispatcher.Invoke(() => { image_Copy5.Source = byteArrayToImage(us.ReceiveMessageIMG()); });
-            else if(i == 6)
-                Dispatcher.Invoke(() => { image_Copy6.Source = byteArrayToImage(us.ReceiveMessageIMG()); });
+            else if(i == 5)
+            {
+                Dispatcher.Invoke(() => { try { ImageSource img = byteArrayToImage(x); if (img == null) { IsBroken = true; return; } image_Copy5.Source = img; } catch (Exception) { return; } });
+                Dispatcher.Invoke(() => { label_image6.Content = name_clients[i]; });
+            }
+            else if (i == 6)
+            {
+                Dispatcher.Invoke(() => { try { ImageSource img = byteArrayToImage(x); if (img == null) { IsBroken = true; return; } image_Copy6.Source = img; } catch (Exception) { return; } });
+                Dispatcher.Invoke(() => { label_image7.Content = name_clients[i]; });
+            }
             else if(i == 7)
-                Dispatcher.Invoke(() => { image_Copy7.Source = byteArrayToImage(us.ReceiveMessageIMG()); });
+            {
+                Dispatcher.Invoke(() => { try { ImageSource img = byteArrayToImage(x); if (img == null) { IsBroken = true; return; } image_Copy7.Source = img; } catch (Exception) { return; } });
+                Dispatcher.Invoke(() => { label_image8.Content = name_clients[i]; });
+            }
             if (i == 8)
-                Dispatcher.Invoke(() => { image_Copy8.Source = byteArrayToImage(us.ReceiveMessageIMG()); });
+            {
+                Dispatcher.Invoke(() => { try { ImageSource img = byteArrayToImage(x); if (img == null) { IsBroken = true; return; } image_Copy8.Source = img; } catch (Exception) { return; } });
+                Dispatcher.Invoke(() => { label_image9.Content = name_clients[i]; });
+            }
             if (i == 9)
-                Dispatcher.Invoke(() => { image_Copy9.Source = byteArrayToImage(us.ReceiveMessageIMG()); });
+            {
+                Dispatcher.Invoke(() => { try { ImageSource img = byteArrayToImage(x); if (img == null) { IsBroken = true; return; } image_Copy9.Source = img; } catch (Exception) { return; } });
+                Dispatcher.Invoke(() => { label_image10.Content = name_clients[i]; });
+            }
             if (i == 10)
-                Dispatcher.Invoke(() => { image_Copy10.Source = byteArrayToImage(us.ReceiveMessageIMG()); });
+            {
+                Dispatcher.Invoke(() => { try { ImageSource img = byteArrayToImage(x); if (img == null) { IsBroken = true; return; } image_Copy10.Source = img; } catch (Exception) { return; } });
+                Dispatcher.Invoke(() => { label_image11.Content = name_clients[i]; });
+            }
             if (i == 11)
-                Dispatcher.Invoke(() => { image_Copy11.Source = byteArrayToImage(us.ReceiveMessageIMG()); });
+            {
+                Dispatcher.Invoke(() => { try { ImageSource img = byteArrayToImage(x); if (img == null) { IsBroken = true; return; } image_Copy11.Source = img; } catch (Exception) { return; } });
+                Dispatcher.Invoke(() => { label_image12.Content = name_clients[i]; });
+            }
             if (i == 12)
-                Dispatcher.Invoke(() => { image_Copy12.Source = byteArrayToImage(us.ReceiveMessageIMG()); });
+            {
+                Dispatcher.Invoke(() => { try { ImageSource img = byteArrayToImage(x); if (img == null) { IsBroken = true; return; } image_Copy12.Source = img; } catch (Exception) { return; } });
+                Dispatcher.Invoke(() => { label_image13.Content = name_clients[i]; });
+            }
             if (i == 13)
-                Dispatcher.Invoke(() => { image_Copy13.Source = byteArrayToImage(us.ReceiveMessageIMG()); });
+            {
+                Dispatcher.Invoke(() => { try { ImageSource img = byteArrayToImage(x); if (img == null) { IsBroken = true; return; } image_Copy13.Source = img; } catch (Exception) { return; } });
+                Dispatcher.Invoke(() => { label_image14.Content = name_clients[i]; });
+            }
             if (i == 14)
-                Dispatcher.Invoke(() => { image_Copy14.Source = byteArrayToImage(us.ReceiveMessageIMG()); });
+            {
+                Dispatcher.Invoke(() => { try { ImageSource img = byteArrayToImage(x); if (img == null) { IsBroken = true; return; } image_Copy14.Source = img; } catch (Exception) { return; } });
+                Dispatcher.Invoke(() => { label_image15.Content = name_clients[i]; });
+            }
             if (i == 15)
-                Dispatcher.Invoke(() => { image_Copy15.Source = byteArrayToImage(us.ReceiveMessageIMG()); });
-            if (i == 16)
-                Dispatcher.Invoke(() => { image_Copy16.Source = byteArrayToImage(us.ReceiveMessageIMG()); });
-                */      
+            {
+                Dispatcher.Invoke(() => { try { ImageSource img = byteArrayToImage(x); if (img == null) { IsBroken = true; return; } image_Copy15.Source = img; } catch (Exception) { return; } });
+                Dispatcher.Invoke(() => { label_image16.Content = name_clients[i]; });
+            }
         }
 
         public ImageSource byteArrayToImage(byte[] byteArrayIn)
